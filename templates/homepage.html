@@ -2,24 +2,42 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Handlebars</title>
+
     <style>
-    
     </style>
   </head>
+
   <body>
-    <center>
 
-      <h1>Weather Information</h1>
-      <h2>{{place}}</h2>
-      <p>{{applicable_date}}</p>
-      <p>Longitude/Lattitude: {{latt_long}}</p>
-      <p>Weather: {{weather_state_name}}</p>
-      <img src="{{image}}">
+    <div class="jumbotron text-center" style="background-color: #71CEFF; ">
+      <h1>Handlebars</h1>
+      <p>Welcome to Handlebars!<br>
+        A site built with the CityBikes, Maps Static, and MetaWeather APIs.
+      </p>
+    </div>
 
-      <br><br><br>
-      <a href="{{ url_for('root') }}">Home</a><br><br>
-      <footer>Team Mediocrity</footer>
-    </center>
+    <h2 style="text-align: center;">Search a Location</h2>
+    <form class="active-cyan-3 active-cyan-4" action="" style="text-align: center">
+      <input class="form-control" type="text" placeholder="Search"
+        aria-label="Search" style="width: 30%; margin: 10px auto;">
+      <button type="button" class="btn btn-primary">Search</button>
+    </form>
+
+
+    <h1>Weather Information</h1>
+    <h2>{{place}}</h2>
+    <p>{{applicable_date}}</p>
+    <p>Longitude/Lattitude: {{latt_long}}</p>
+    <p>Weather: {{weather_state_name}}</p>
+    <img src="{{image}}">
+
+    <br><br><br>
+    <a href="{{ url_for('root') }}">Home</a><br><br>
+    <footer>Team Mediocrity</footer>
   </body>
 </html>
