@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>API Intro{% block head %}{% endblock %}</title>
+    <style>
+      td { text-align: center; }
+    </style>
+  </head>
+  <body>
+    <center>
+      {% block content %}
+      {% endblock %}
+
+      <br><br><br>
+      <a href="{{ url_for('root') }}">Home</a><br><br>
+      <footer>Team Mediocrity</footer>
+    </center>
+  </body>
+</html>
