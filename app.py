@@ -13,7 +13,7 @@ def root():
     response = u.read()
     data = json.loads(response)
     weather = data['consolidated_weather'][0]
-    return render_template("metaweather.html",
+    return render_template("homepage.html",
                             place = data['title'],
                             latt_long = data['latt_long'],
                             applicable_date = weather['applicable_date'],

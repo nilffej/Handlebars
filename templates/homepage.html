@@ -2,15 +2,20 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>API Intro{% block head %}{% endblock %}</title>
+    <title>Handlebars</title>
     <style>
-      td { text-align: center; }
+    
     </style>
   </head>
   <body>
     <center>
-      {% block content %}
-      {% endblock %}
+
+      <h1>Weather Information</h1>
+      <h2>{{place}}</h2>
+      <p>{{applicable_date}}</p>
+      <p>Longitude/Lattitude: {{latt_long}}</p>
+      <p>Weather: {{weather_state_name}}</p>
+      <img src="{{image}}">
 
       <br><br><br>
       <a href="{{ url_for('root') }}">Home</a><br><br>
