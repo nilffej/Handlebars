@@ -4,8 +4,25 @@
 # 11/13/2019
 
 from flask import Flask, render_template, request, redirect, url_for
+import sqlite3
+import os
 import urllib.request, json
 app = Flask(__name__)
+
+#-----------------------------------------------------------------
+#DATABASE SETUP
+#Worked on database setup.
+DB_FILE = "Info.db"
+db = sqlite3.connect(DB_FILE)
+c = db.cursor()
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='userdata' ''')
+if c.fetchone()[0] < 1:
+    c.execute("CREATE TABLE userdata (userID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT);")
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='reviewdata' ''')
+if c.fetchone()[0] < 1:
+    c.execute("CREATE TABLE blogdata(userID INTEGER, topicID INTEGER PRIMARY KEY AUTOINCREMENT, location TEXT, rating INTEGER, content BLOB);")
+
+#-----------------------------------------------------------------
 
 @app.route("/")
 def root():
