@@ -1,1 +1,7 @@
-hi
+linJ -- 2019-11-19 4:41
+Design doc update summary:
+- Updated site map for clarity and redesigned component map
+- Elaborated on database entry types and change fields
+- Distinguished minimum viable product and extra features
+- Added work distribution
+- Elaborated on search handling and table filtering
