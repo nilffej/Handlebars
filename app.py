@@ -15,10 +15,13 @@ app = Flask(__name__)
 DB_FILE = "Info.db"
 db = sqlite3.connect(DB_FILE)
 c = db.cursor()
-c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='userdata' ''')
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='USERNAMES' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE userdata (userID INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT);")
-c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='reviewdata' ''')
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='REVIEWS' ''')
+if c.fetchone()[0] < 1:
+    c.execute("CREATE TABLE blogdata(userID INTEGER, topicID INTEGER PRIMARY KEY AUTOINCREMENT, location TEXT, rating INTEGER, content BLOB);")
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE blogdata(userID INTEGER, topicID INTEGER PRIMARY KEY AUTOINCREMENT, location TEXT, rating INTEGER, content BLOB);")
 
