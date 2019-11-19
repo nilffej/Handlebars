@@ -1,1 +1,8 @@
-hi
+liuH -- 2019-11-16 14:30
+Worked on component map
+
+liuH -- 2019-11-18 13:30
+Created username table and reviews table
+
+liuH -- 2019-11-18 20:49
+Made component map more simple
