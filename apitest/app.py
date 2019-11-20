@@ -27,7 +27,7 @@ def root():
         c = db.cursor()
         for i in data['networks']:
             # print(i['location']['city'])
-            c.execute('INSERT INTO test VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
+            c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
                                                                         i['id'],
                                                                         i['location']['city'],
                                                                         i['location']['country'],

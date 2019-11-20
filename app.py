@@ -3,17 +3,17 @@
 # K25
 # 11/13/2019
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, redirect
 import sqlite3
 import os
 from flask import flash
-from flask import session
 import urllib.request, json
 from os import urandom
 app = Flask(__name__)
 app.secret_key = urandom(32)
 
 #-----------------------------------------------------------------
+
 #DATABASE SETUP
 DB_FILE = "Info.db"
 db = sqlite3.connect(DB_FILE)
@@ -33,7 +33,28 @@ if c.fetchone()[0] < 1:
 #Creates BIKES
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, city TEXT, country TEXT, bikeID TEXT, name TEXT, latitude INTEGER, longitude INTEGER);")
+    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, city TEXT, country TEXT, bikeID TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
+    u = urllib.request.urlopen(
+        "http://api.citybik.es/v2/networks"
+    )
+    response = u.read()
+    data = json.loads(response)
+    with sqlite3.connect(DB_FILE) as db:
+        c = db.cursor()
+        for i in data['networks']:
+            # print(i['location']['city'])
+            c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
+                                                                        i['id'],
+                                                                        i['location']['city'],
+                                                                        i['location']['country'],
+                                                                        i['name'],
+                                                                        i['location']['latitude'],
+                                                                        i['location']['longitude']
+                                                                        ))
+    db.commit()
+    db.close()
+
+
 
 #-----------------------------------------------------------------
 
@@ -61,11 +82,18 @@ def search():
         response = u.read()
         data = json.loads(response)
         weather = data['consolidated_weather'][0]
+        with sqlite3.connect(DB_FILE) as connection:
+          cur = connection.cursor()
+          q = 'SELECT * FROM BIKES;'
+          foo = cur.execute(q)
+          userList = foo.fetchall()
         return render_template("searchresults.html", place = data['title'],
                                 latt_long = data['latt_long'],
                                 applicable_date = weather['applicable_date'],
+                                bike = userList,
                                 weather_state_name = weather['weather_state_name'],
                                 image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))
+
     else:
         return redirect(url_for("root"))
 
