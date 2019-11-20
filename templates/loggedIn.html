@@ -3,6 +3,7 @@
 {% block searchresults %}
 
 <div style="margin: 10px;">
+  <p>Logged In </p>
   <h1>Weather Information</h1>
   <h2>{{place}}</h2>
   <p>{{applicable_date}}</p>
@@ -10,4 +11,9 @@
   <p>Weather: {{weather_state_name}}</p>
   <img src="{{image}}">
 </div>
+{% endblock %}
+{% block logout %}
+<form>
+  <button title="logout" type="submit" formaction="/logout">Logout</button>
+</form>
 {% endblock %}

@@ -6,9 +6,12 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
+from flask import flash
 from flask import session
 import urllib.request, json
+from os import urandom
 app = Flask(__name__)
+app.secret_key = urandom(32)
 
 #-----------------------------------------------------------------
 #DATABASE SETUP
@@ -20,7 +23,7 @@ c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name=
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE USER(username TEXT, password TEXT);")
 #Creates SAVEDBIKES
-c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='SAVED' ''')
+c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='SAVEDBIKES' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE SAVEDBIKES(username TEXT, bikeNumber INTEGER);")
 #Creates REVIEWS
@@ -37,6 +40,14 @@ if c.fetchone()[0] < 1:
 @app.route("/")
 def root():
     return render_template("homepage.html")
+@app.route("/loggedIn")
+def loggedIn():
+    return render_template("loggedIn.html")
+@app.route("/logout")
+def logout():
+    if "user" in session:
+        session.pop('user')
+    return redirect(url_for("root"))
 
 @app.route("/search")
 def search():
@@ -62,14 +73,14 @@ def search():
 def login():
   # if user already logged in, redirects back to discover
   if 'user' in session:
-    return redirect(url_for('root'))
+    return redirect(url_for('loggedIn'))
   # checking to see if things were submitted
   if (request.args):
     if (bool(request.args["username"]) and bool(request.args["password"])):
       # setting request.args to variables to make life easier
       inpUser = request.args["username"]
       inpPass = request.args["password"]
-      with sqlite3.connect(Info.db) as connection:
+      with sqlite3.connect(DB_FILE) as connection:
         cur = connection.cursor()
         q = 'SELECT username, password FROM USER;'
         foo = cur.execute(q)
@@ -78,7 +89,7 @@ def login():
           if inpUser == row[0]:
             if inpPass == row[1]:
               session['user'] = inpUser
-              return(redirect(url_for("profile")))
+              return(redirect(url_for("loggedIn")))
             else:
               flash('Login credentials were incorrect. Please try again.')
               return(redirect(url_for("login")))
@@ -89,7 +100,13 @@ def login():
   return render_template("login.html")
 
 
-
+def updateUsers():
+    with sqlite3.connect(DB_FILE) as connection:
+        cur = connection.cursor()
+        foo = cur.execute('SELECT username, password FROM USER;') # Selects all username/password combinations
+        userList = foo.fetchall()
+        userList.sort() # Usernames sorted in alphabetical order
+        return userList
 
 
 @app.route("/register")
