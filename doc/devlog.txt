@@ -20,3 +20,9 @@ Team design doc update summary:
 liuH -- 2019-11-19 20:41
 - Completed login page and register page
 - Edited database to reflect changes on design doc
+
+chinK, chuC -- 2019-11-20 14:00
+Procedures to make the project more awesome:
+- Review each others' code to check for errors/bugs. Nobody makes perfect code. 
+- In order to dissipate dissonance, we will communicate our ideas among ourselves in a clear way.
+- We will welcome and be open to each others' ideas.
