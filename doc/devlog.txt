@@ -3,6 +3,29 @@ SoftDev1 pd9
 P #01 — ArRESTed Development
 2019-11-20
 
+--------------------------------------------------------------------------------
+DESIGN DOC INFO:
+
+v 0.0
+  - Added basic requirements
+v 0.1
+  - Updated sitemap
+  - Fixed composition map
+  - Added roles
+  - Added minimum viable product and extra feature list
+v 0.2
+  - Updated database management
+
+--------------------------------------------------------------------------------
+
+RESPONSE TO THE READING:
+Procedures to make the project more awesome:
+- Review each others' code to check for errors/bugs. Nobody makes perfect code. 
+- In order to dissipate dissonance, we will communicate our ideas among ourselves in a clear way.
+- We will welcome and be open to each others' ideas.
+
+--------------------------------------------------------------------------------
+
 liuH -- 2019-11-18 13:20
 - Created database to store usernames and bikedata
 
@@ -22,7 +45,8 @@ liuH -- 2019-11-19 20:41
 - Edited database to reflect changes on design doc
 
 chinK, chuC -- 2019-11-20 14:00
-Procedures to make the project more awesome:
-- Review each others' code to check for errors/bugs. Nobody makes perfect code. 
-- In order to dissipate dissonance, we will communicate our ideas among ourselves in a clear way.
-- We will welcome and be open to each others' ideas.
+- worked on response to reading: 
+  Procedures to make the project more awesome:
+  - Review each others' code to check for errors/bugs. Nobody makes perfect code. 
+  - In order to dissipate dissonance, we will communicate our ideas among ourselves in a clear way.
+  - We will welcome and be open to each others' ideas.
