@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <title>Handlebars</title>
+{% extends "homepageTemplate.html" %}
 
+<<<<<<< HEAD
     <style>
     </style>
   </head>
@@ -62,5 +55,12 @@
 	<input type="password" name="password"><br><br>
 	<button type="submit">Log In</button>
 </form> -->
+=======
+{% block login %}
+<form>
+  <button title="login" type="submit" formaction="/login">Login</button>
+  <button title="register" type="submit" formaction="/register">Register</button>
+</form>
+>>>>>>> 8d1247f96e790325a6793b910295f78df6a7485a
 
-</html>
+{% endblock %}

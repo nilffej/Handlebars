@@ -2,21 +2,8 @@
 
 {% block searchresults %}
 
-<div class="container-fluid" >
-  <div class="row">
-    <div class="col-sm border">
-      One of three columns
-    </div>
-    <div class="col-sm border">
-      One of three columns
-    </div>
-    <div class="col-sm border">
-      One of three columns
-    </div>
-  </div>
-</div>
-
 <div style="margin: 10px;">
+  <p>Logged In </p>
   <h1>Weather Information</h1>
   <h2>{{place}}</h2>
   <p>{{applicable_date}}</p>
@@ -25,7 +12,6 @@
   <img src="{{image}}">
 </div>
 {% endblock %}
-
 {% block logout %}
 <form>
   <button title="logout" type="submit" formaction="/logout">Logout</button>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% extends "template.html" %}
+
+{% block title %} | Login{% endblock %}
+
+{% block headerbuttons %}
+<form>
+  <button title="discover" type="submit" formaction="/">Discover</button>
+  <button title="register" type="submit" formaction="/register">Register</button>
+</form>
+{% endblock %}
+
+{% block body %}
+
+{% if msg %}
+<h3>{{ msg }}</h3>
+{% endif %}
+
+<form action="/login" method="GET" align="center">
+  Username<br>
+	<input type="text" name="username"><br><br>
+  Password<br>
+	<input type="password" name="password"><br><br>
+	<button type="submit">Log In</button>
+</form>
+
+{% for message in get_flashed_messages() %}
+<br><br>
+<center><b>{{ message }}</b></center>
+{% endfor %}
+
+{% endblock %}
