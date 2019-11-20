@@ -1,3 +1,9 @@
+liuH -- 2019-11-18 13:20
+- Created database to store usernames and bikedata
+
+liuH -- 2019-11-18 13:20
+- started login page and register page
+
 linJ -- 2019-11-19 4:41
 Team design doc update summary:
 - Updated site map for clarity and redesigned component map
@@ -5,3 +11,7 @@ Team design doc update summary:
 - Distinguished minimum viable product and extra features
 - Added work distribution
 - Elaborated on search handling and table filtering
+
+liuH -- 2019-11-19 20:41
+- Completed login page and register page
+- Edited database to reflect changes on design doc
