@@ -1,9 +1,66 @@
 {% extends "homepageTemplate.html" %}
 
+<<<<<<< HEAD
+    <style>
+    </style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-light pull-right" style="background-color: #5dade2;">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+
+          <li class="nav-item">
+            <a class="nav-link">Login</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link">Register</a>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+
+    <div class="jumbotron text-center" style="background-color: #aed6f1;">
+      <h1>Handlebars</h1>
+      <p>Welcome to Handlebars!<br>
+        A site built with the CityBikes, Maps Static, and MetaWeather APIs.
+      </p>
+    </div>
+
+    <h2 style="text-align: center;">Search a Location</h2>
+
+    <form class="active-cyan-3 active-cyan-4" action="/search" style="text-align: center;">
+      <input class="form-control" type="text" placeholder="Location here..."
+        aria-label="Search" style="width: 30%; margin: 10px auto;" name="searchbar">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+
+    {% block searchresults %}
+
+    {% endblock %}
+
+    <br><br><br>
+    <center>
+      <footer>~ Team Handlebars ~</footer>
+    </center>
+  </body>
+
+  <!-- <form action="/login" method="GET" align="center">
+  Username<br>
+	<input type="text" name="username"><br><br>
+  Password<br>
+	<input type="password" name="password"><br><br>
+	<button type="submit">Log In</button>
+</form> -->
+=======
 {% block login %}
 <form>
   <button title="login" type="submit" formaction="/login">Login</button>
   <button title="register" type="submit" formaction="/register">Register</button>
 </form>
+>>>>>>> 8d1247f96e790325a6793b910295f78df6a7485a
 
 {% endblock %}
