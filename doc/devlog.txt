@@ -1,3 +1,8 @@
+HandleBars by Team Handlebars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu
+SoftDev1 pd9
+P #01 — ArRESTed Development
+2019-11-20
+
 liuH -- 2019-11-18 13:20
 - Created database to store usernames and bikedata
 
