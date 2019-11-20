@@ -33,7 +33,7 @@ if c.fetchone()[0] < 1:
 #Creates BIKES
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, city TEXT, country TEXT, bikeID TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
+    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, bikeID TEXT,city TEXT, country TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
     u = urllib.request.urlopen(
         "http://api.citybik.es/v2/networks"
     )
@@ -84,13 +84,19 @@ def search():
         weather = data['consolidated_weather'][0]
         with sqlite3.connect(DB_FILE) as connection:
           cur = connection.cursor()
-          q = 'SELECT * FROM BIKES;'
+          q = "SELECT * FROM BIKES"
           foo = cur.execute(q)
           userList = foo.fetchall()
+          d = "none"
+          for x in userList:
+              if x[2] == request.args["searchbar"]:
+                  d = x
+                  break
+
         return render_template("searchresults.html", place = data['title'],
                                 latt_long = data['latt_long'],
                                 applicable_date = weather['applicable_date'],
-                                bike = userList,
+                                bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
                                 weather_state_name = weather['weather_state_name'],
                                 image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))
 
