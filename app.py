@@ -114,9 +114,10 @@ def updateUsers():
 def profile():
     entryList = updateSavedBikes()
     userList = updateUsers()
-    # saved is filtered list of all entries by specific user
+    # userSaved is filtered list of all entries by specific user
     toprint = ""
     userSaved = []
+    # goes through Saved bikes and if it is the users it appends it
     for entry in entryList:
         if entry[0] == session['user']:
             userSaved.append(entry)
@@ -127,15 +128,11 @@ def profile():
           q = "SELECT * FROM BIKES"
           foo = cur.execute(q)
           bikeList = foo.fetchall()
-          for x in bikeList:
-              if x[0] == entry[1]:
-                  cityName = x
-                  toprint += x[1]
-                  #toprint += x[1]
-                  #toprint += x[2]
-                  #toprint += x[3]
-                  #toprint += x[4]
-              break
+          for bike in bikeList:
+              if bike[0] == entry[1]:
+                  cityName = bike[2]
+                  toprint += bike[2]
+                  break
 
     return render_template("profile.html",
     title = "Profile - {}".format(session["user"]), heading = session["user"],
@@ -170,42 +167,6 @@ def search():
                   d = x
                   break
 
-        return render_template("searchresults.html", place = data['title'],
-                                latt_long = data['latt_long'],
-                                applicable_date = weather['applicable_date'],
-                                bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
-                                weather_state_name = weather['weather_state_name'],
-                                image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))
-
-    else:
-        return redirect(url_for("root"))
-
-
-@app.route("/searchNSave")
-def searchNSave():
-    if request.args["searchbar"]:
-        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?query={}".format(request.args["searchbar"].replace(" ","%20")))
-        response = u.read()
-        data = json.loads(response)
-        if len(data) == 0:
-            return redirect(url_for("root"))
-        u = urllib.request.urlopen("https://www.metaweather.com/api/location/{}".format(data[0]["woeid"]))
-        response = u.read()
-        data = json.loads(response)
-        weather = data['consolidated_weather'][0]
-        with sqlite3.connect(DB_FILE) as connection:
-          cur = connection.cursor()
-          q = "SELECT * FROM BIKES"
-          foo = cur.execute(q)
-          userList = foo.fetchall()
-          d = "none"
-          for x in userList:
-              if x[2] == request.args["searchbar"]:
-                  d = x
-                  break
-        with sqlite3.connect(DB_FILE) as connection:
-            c = connection.cursor()
-            c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],d[0]))
         return render_template("searchresults.html", place = data['title'],
                                 latt_long = data['latt_long'],
                                 applicable_date = weather['applicable_date'],
