@@ -1,0 +1,58 @@
+{% extends "homepageTemplate.html" %}
+{% block title %} | {{title}}{% endblock %}
+
+{% block headerbuttons %}
+<form>
+  <button title="discover" type="submit" formaction="/">Discover</button>
+  {% if sessionstatus %}
+  <!-- Displayed when logged in -->
+  <button title="profile" type="submit" formaction="/profile">My Profile</button>
+  <button title="logout" type="submit" formaction="/logout">Log Out</button>
+  {% else %}
+  <!-- Displayed when NOT logged in -->
+  <button title="login" type="submit" formaction="/login">Log In</button>
+  <button title="register" type="submit" formaction="/register">Register</button>
+  {% endif %}
+</form>
+{% endblock %}
+
+{% block body %}
+<table width="100%">
+  <tr>
+    <td width="20%">
+      <h3>Users</h3>
+    </td>
+    <td>
+      <h2>{{heading}}</h2>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top">
+        <form action="/userpage">
+          View:<br> <input type="text" name="username">
+          <button type="submit">Search</button>
+        </form><br>
+        {% for index in userNum %}
+          <p>{{users[index][0]}}</p>
+        {% endfor %}
+      </td>
+
+      <td>
+        {% block log %}
+        {% endblock %}
+        <table width="100%">
+          {% for index in postNum %}
+          <tr style="border: 1px solid black">
+            <td style="border: 1px solid black">
+              <h2>{{entries[index][0]}}</h2>
+              <h4><a href="/profile/{{entries[index][1]}}">{{entries[index][1]}}</a> - {{entries[index][2]}}</h4>
+              <p>{{entries[index][3]}}</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+    </td>
+
+  </tr>
+</table>
+{% endblock %}

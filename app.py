@@ -57,13 +57,74 @@ if c.fetchone()[0] < 1:
 
 
 #-----------------------------------------------------------------
+@app.route("/test")
+def test():
+    with sqlite3.connect(DB_FILE) as db:
+        c = db.cursor()
+        c.execute('INSERT INTO SAVEDBIKES VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
+                                                                    i['id'],
+                                                                    i['location']['city'],
+                                                                    i['location']['country'],
+                                                                    i['name'],
+                                                                    i['location']['latitude'],
+                                                                    i['location']['longitude']
+                                                                    ))
+    db.commit()
+    db.close()
+
+
 
 @app.route("/")
 def root():
     return render_template("homepage.html")
+
+@app.route("/saveBike")
+def saveBike():
+    with sqlite3.connect(DB_FILE) as db:
+        c = db.cursor()
+        c.execute('INSERT INTO SAVEDBIKES VALUES (?, ?)', ("hliu00",3))
+    db.commit()
+    db.close()
+
+
+
+def updateSavedBikes():
+    with sqlite3.connect(DB_FILE) as connection:
+        cur = connection.cursor()
+        foo = cur.execute('SELECT * from SAVEDBIKES;') # Selects the title, username, date and content from all posts
+        savedBikes = foo.fetchall()
+        savedBikes.reverse() # Reverse for recent posts at top
+        return savedBikes
+
+def updateUsers():
+    with sqlite3.connect(DB_FILE) as connection:
+        cur = connection.cursor()
+        foo = cur.execute('SELECT * FROM USER;') # Selects all username/password combinations
+        userList = foo.fetchall()
+        userList.sort() # Usernames sorted in alphabetical order
+        return userList
+
+# Dispalys user's personal blog page and loads HTML with blog writing form
+@app.route("/profile")
+def profile():
+    entryList = updateSavedBikes()
+    userList = updateUsers()
+    # saved is filtered list of all entries by specific user
+    userSaved = []
+    for entry in entryList:
+        if entry[0] == session['user']:
+            userSaved.append(entry)
+    return render_template("profile.html",
+    title = "Profile - {}".format(session["user"]), heading = session["user"],
+    entries = userSaved, postNum = range(len(userSaved)), sessionstatus = "user" in session)
+
+
+
+
 @app.route("/loggedIn")
 def loggedIn():
     return render_template("loggedIn.html")
+
 @app.route("/logout")
 def logout():
     if "user" in session:
@@ -123,7 +184,7 @@ def login():
           if inpUser == row[0]:
             if inpPass == row[1]:
               session['user'] = inpUser
-              return(redirect(url_for("loggedIn")))
+              return(redirect(url_for("profile")))
             else:
               flash('Login credentials were incorrect. Please try again.')
               return(redirect(url_for("login")))

@@ -43,3 +43,20 @@ if __name__ == "__main__":
 
 db.commit()
 db.close()
+
+
+# Displays specific user's page (for hyperlink on individual posts)
+@app.route("/profile/<USERNAME>")
+def profile2(USERNAME):
+  userList = updateUsers()
+  if 'user' in session:
+    if (USERNAME == session["user"]):
+        return redirect(url_for("profile"))
+  entryList = updateSavedBikes()
+  userSaved = []
+  for entry in entryList:
+    if entry[0] == USERNAME:
+      userSaved.append()
+  return render_template("entrydisplay.html",
+                         title="Profile - {}".format(USERNAME), heading=USERNAME,
+                         entries=userSaved, postNum=range(len(userSaved)),sessionstatus="user" in session)
