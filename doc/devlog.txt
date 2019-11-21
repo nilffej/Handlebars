@@ -51,6 +51,18 @@ chinK, chuC -- 2019-11-20 14:00
   - In order to dissipate dissonance, we will communicate our ideas among ourselves in a clear way.
   - We will welcome and be open to each others' ideas.
 
+chuC -- 2019-11-20 14:00
+- Inserted all bike data into a database to allow for easy access of data
+
 linJ -- 2019-11-20 14:05
 - Added navbar to search page
 - Began column formatting for search results
+
+liuH -- 2019-11-20 15:39
+- Connected bike and weather api to the app.py file
+
+liuH -- 2019-11-20 18:33
+- Added functionality to allow users to see their saved bikes
+
+liuH -- 2019-11-20 20:43
+- Created requirements.txt file and created a virtual environment to test it out
