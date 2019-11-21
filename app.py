@@ -79,18 +79,10 @@ def root():
     return render_template("homepage.html")
 
 
-##must set conditional, if not present then can save
-@app.route("/addBike")
-def addBike():
-    with sqlite3.connect(DB_FILE) as connection:
-        c = connection.cursor()
-        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
-        connection.commit()
-    return redirect(url_for("profile"))
 
 
 
-
+#
 def updateSavedBikes():
     with sqlite3.connect(DB_FILE) as connection:
         cur = connection.cursor()
@@ -132,6 +124,7 @@ def profile():
               if bike[0] == entry[1]:
                   cityName = bike[2]
                   toprint += bike[2]
+                  toprint += bike[3]
                   break
 
     return render_template("profile.html",
@@ -167,6 +160,7 @@ def search():
                   d = x
                   break
 
+
         return render_template("searchresults.html", place = data['title'],
                                 latt_long = data['latt_long'],
                                 applicable_date = weather['applicable_date'],
@@ -177,6 +171,15 @@ def search():
     else:
         return redirect(url_for("root"))
 
+
+##must set conditional, if not present then can save
+@app.route("/addBike")
+def addBike():
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
+        connection.commit()
+    return redirect(url_for("profile"))
 
 @app.route("/login")
 def login():
