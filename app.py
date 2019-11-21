@@ -78,13 +78,16 @@ def test():
 def root():
     return render_template("homepage.html")
 
-@app.route("/saveBike")
-def saveBike():
-    with sqlite3.connect(DB_FILE) as db:
-        c = db.cursor()
-        c.execute('INSERT INTO SAVEDBIKES VALUES (?, ?)', ("hliu00",3))
-    db.commit()
-    db.close()
+
+##must set conditional, if not present then can save
+@app.route("/addBike")
+def addBike():
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
+        connection.commit()
+    return redirect(url_for("profile"))
+
 
 
 
@@ -105,25 +108,38 @@ def updateUsers():
         return userList
 
 # Dispalys user's personal blog page and loads HTML with blog writing form
+
+
 @app.route("/profile")
 def profile():
     entryList = updateSavedBikes()
     userList = updateUsers()
     # saved is filtered list of all entries by specific user
+    toprint = ""
     userSaved = []
     for entry in entryList:
         if entry[0] == session['user']:
             userSaved.append(entry)
+    for entry in userSaved:
+        cityName = ""
+        with sqlite3.connect(DB_FILE) as connection:
+          cur = connection.cursor()
+          q = "SELECT * FROM BIKES"
+          foo = cur.execute(q)
+          bikeList = foo.fetchall()
+          for x in bikeList:
+              if x[0] == entry[1]:
+                  cityName = x
+                  toprint += x[1]
+                  #toprint += x[1]
+                  #toprint += x[2]
+                  #toprint += x[3]
+                  #toprint += x[4]
+              break
+
     return render_template("profile.html",
     title = "Profile - {}".format(session["user"]), heading = session["user"],
-    entries = userSaved, postNum = range(len(userSaved)), sessionstatus = "user" in session)
-
-
-
-
-@app.route("/loggedIn")
-def loggedIn():
-    return render_template("loggedIn.html")
+    entries = userSaved, postNum = range(len(userSaved)), sessionstatus = "user" in session, to = toprint)
 
 @app.route("/logout")
 def logout():
@@ -164,11 +180,48 @@ def search():
     else:
         return redirect(url_for("root"))
 
+
+@app.route("/searchNSave")
+def searchNSave():
+    if request.args["searchbar"]:
+        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?query={}".format(request.args["searchbar"].replace(" ","%20")))
+        response = u.read()
+        data = json.loads(response)
+        if len(data) == 0:
+            return redirect(url_for("root"))
+        u = urllib.request.urlopen("https://www.metaweather.com/api/location/{}".format(data[0]["woeid"]))
+        response = u.read()
+        data = json.loads(response)
+        weather = data['consolidated_weather'][0]
+        with sqlite3.connect(DB_FILE) as connection:
+          cur = connection.cursor()
+          q = "SELECT * FROM BIKES"
+          foo = cur.execute(q)
+          userList = foo.fetchall()
+          d = "none"
+          for x in userList:
+              if x[2] == request.args["searchbar"]:
+                  d = x
+                  break
+        with sqlite3.connect(DB_FILE) as connection:
+            c = connection.cursor()
+            c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],d[0]))
+        return render_template("searchresults.html", place = data['title'],
+                                latt_long = data['latt_long'],
+                                applicable_date = weather['applicable_date'],
+                                bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
+                                weather_state_name = weather['weather_state_name'],
+                                image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))
+
+    else:
+        return redirect(url_for("root"))
+
+
 @app.route("/login")
 def login():
   # if user already logged in, redirects back to discover
   if 'user' in session:
-    return redirect(url_for('loggedIn'))
+    return redirect(url_for('profile'))
   # checking to see if things were submitted
   if (request.args):
     if (bool(request.args["username"]) and bool(request.args["password"])):
