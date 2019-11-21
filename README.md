@@ -6,11 +6,11 @@ Allow the user to explore bike rental spots, a map, and the weather of a searche
 
 ## APIs:
 City Bike  
-API Location: http://api.citybik.es/v2/networks
+API Location: http://api.citybik.es/v2/networks  
 Documentation: http://api.citybik.es/v2/#filter
 
-MapQuest Open Geocoding
+MapQuest Open Geocoding  
 API Location: https://developer.mapquest.com/documentation/open/geocoding-api/
 
-Metaweather:
+Metaweather:  
 API location: https://www.metaweather.com/api/
