@@ -1,6 +1,33 @@
 <!DOCTYPE html>
 {% extends "template.html" %}
 
+{% block css %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+  /* body {
+    background-image: url("https://img2.goodfon.com/wallpaper/nbig/7/57/raznoe-velosiped-bicycle-5516.jpg")
+  } */
+  .box {
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .form-control {
+    width: 200px;
+    margin: auto;
+    text-align: center;
+    transition:.25s;
+  }
+  .form-control:focus {
+    width: 280px;
+  }
+</style>
+{% endblock %}
 {% block title %} | Login{% endblock %}
 
 {% block headerbuttons %}
@@ -16,13 +43,15 @@
 <h3>{{ msg }}</h3>
 {% endif %}
 
-<form action="/login" method="GET" align="center">
+<center>
+<form class="box" action="/login" method="GET">
   Username<br>
-	<input type="text" name="username"><br><br>
-  Password<br>
-	<input type="password" name="password"><br><br>
-	<button type="submit">Log In</button>
+	<input class="form-control" type="text" name="username" placeholder="Username"><br>
+  Password
+	<input class="form-control" type="password" name="password" placeholder="Password"><br>
+	<button class="btn btn-success" type="submit">Log In</button>
 </form>
+</center>
 
 {% for message in get_flashed_messages() %}
 <br><br>

@@ -3,6 +3,24 @@
 
 {% block title %} | Register{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+  /* body {
+    background-image: url("https://img2.goodfon.com/wallpaper/nbig/7/57/raznoe-velosiped-bicycle-5516.jpg")
+  } */
+
+  .form-control {
+    width: 200px;
+    text-align: center;
+    transition:.25s;
+  }
+  .form-control:focus {
+    width: 280px;
+  }
+</style>
+{% endblock %}
+
 {% block headerbuttons %}
 <form>
   <button title="discover" type="submit" formaction="/">Discover</button>
@@ -16,15 +34,17 @@
 <h3>{{ msg }}</h3>
 {% endif %}
 
+<center>
 <form action="/register" method="GET" align="center">
-	Username<br>
-	<input type="text" name="username"><br><br>
-	Password<br>
-	<input type="password" name="password"><br><br>
-	Confirm Password<br>
-	<input type="password" name="confirmPass"><br><br>
-	<button type="submit">Register</button>
+	Username
+	<input class="form-control" type="text" name="username" placeholder="Username"><br>
+	Password
+	<input class="form-control" type="password" name="password" placeholder="Password"><br>
+	Confirm Password
+	<input class="form-control" type="password" name="confirmPass" placeholder="Confirm Password"><br>
+	<button class="btn btn-success" type="submit">Register</button>
 </form>
+</center>
 
 {% for message in get_flashed_messages() %}
 <br><br>
