@@ -5,7 +5,7 @@ Roster: Kenneth Chin, Calvin Chu, Jeff Lin (Project Manager), and Henry Liu
 Our website's purpose is to allow a user to explore nearby city bikes, the weather of a certain location, and an image of the location. Users will also be given the opportunity to rate bike companies which will be visible to other users.
 
 ## APIs:
-City Bike  
+[City Bike](http://api.citybik.es/v2/networks)  
 API Location: http://api.citybik.es/v2/networks  
 Documentation: http://api.citybik.es/v2/#filter
 - We use this API to retrieve information about city bikes as well as their longitude and latitude.
