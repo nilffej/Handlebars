@@ -1,13 +1,21 @@
 {% extends "template.html" %}
 
 {% block buttons %}
+{% if sessionstatus %}
+<li class="nav-item">
+  <a href="{{ url_for('profile') }}" class="nav-link">My Profile</a>
+</li>
+<li class="nav-item">
+  <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+</li>
+{% else %}
 <li class="nav-item">
   <a href="{{ url_for('login') }}" class="nav-link">Login</a>
 </li>
-
 <li class="nav-item">
   <a href="{{ url_for('register') }}" class="nav-link">Register</a>
 </li>
+{% endif %}
 {% endblock %}
 
 {% block body %}

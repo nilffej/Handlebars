@@ -4,6 +4,7 @@
 <style>
   .col-sm{
     margin: 15px;
+    padding: 20px;
   }
   .footer-copyright{
     padding: 6px;
@@ -22,20 +23,19 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm border">
-      <div style="margin: 10px;">
         <h1>Weather Information</h1>
         <h2>{{place}}</h2>
         <p>Date: {{applicable_date}}</p>
         <p>Temperature: {{farenheit}} °F / {{celsius}} °C</p>
         <p>Weather: {{weather_state_name}}</p>
-        <img src="{{image}}">
-      </div>
+        <img src="{{ weatherimage }}">
     </div>
     <div class="col-sm border">
       One of three columns
     </div>
     <div class="col-sm border">
-      One of three columns
+      <h1>Map</h1>
+      <img src="{{ mapimage }}" width="80%" style="display: block; margin-left: auto; margin-right: auto;">
     </div>
   </div>
 </div>

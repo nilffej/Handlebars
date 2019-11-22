@@ -79,7 +79,7 @@ searchdict = {}
 
 @app.route("/")
 def root():
-    return render_template("homepage.html")
+    return render_template("homepage.html", sessionstatus = "user" in session)
 
 # must set conditional, if not present then can save
 @app.route("/addBike")
@@ -161,10 +161,11 @@ def search():
         #           d = x
         #           break
         return render_template("searchresults.html", place = data['title'],
-                                applicable_date = weather['applicable_date'], celsius = int(weather['the_temp'], farenheit = int(weather['the_temp']*9.0/5+32),
+                                applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
                                 # bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
                                 weather_state_name = weather['weather_state_name'],
-                                image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))
+                                weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
+                                mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=15&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']))
     else:
         return redirect(url_for("root"))
 
