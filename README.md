@@ -5,7 +5,7 @@ Roster: Kenneth Chin, Calvin Chu, Jeff Lin (Project Manager), and Henry Liu
 Our website's purpose is to allow a user to explore nearby city bikes, the weather of a certain location, and an image of the location. Users will also be given the opportunity to rate bike companies which will be visible to other users.
 
 ## APIs:
-[City Bike](http://api.citybik.es/v2/networks)[[Documentation](http://api.citybik.es/v2/#filter)]
+[City Bike](http://api.citybik.es/v2/networks) [[Documentation](http://api.citybik.es/v2/#filter)]
 - We use this API to retrieve information about city bikes as well as their longitude and latitude.
 
 [MapQuest Open Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
@@ -15,6 +15,18 @@ Our website's purpose is to allow a user to explore nearby city bikes, the weath
 - We use this API to retrieve weather of a requested location.
 
 
-## How to Run the Project:
-- Python3 and pip is required to run the project
+## How to Run the Project:  
+### Requirements:
+- Python3 and pip is required to run the project  
 [Download Python3 here](https://www.python.org/downloads/)
+
+### Creating a virtual environment:
+'$ python3 -m venv <name>'
+'$ ./<name>/bin/activate'
+
+### Clone the project and install requirments.txt:
+'$ git clone git@github.com:nilffej/Handlebars.git'  
+After activating the virutal environment:  
+'(venv)$ cd <name of clone>'  
+'(venv)/<name of clone>$ pip3 install -r doc/requirements.txt'  
+  
