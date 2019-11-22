@@ -18,10 +18,10 @@ Our website's purpose is to allow a user to explore nearby city bikes, the weath
 ## How to Run the Project:  
 ### Requirements:
 Python3 and pip is required to run the project  
-[Download Python3 here](https://www.python.org/downloads/)
+[Download Python3 here](https://www.python.org/downloads/) (pip3 comes with python3 download)
 
 ### Creating a virtual environment:
-`$ python3 -m venv <name>`
+`$ python3 -m venv <name>`  
 `$ ./<name>/bin/activate`
 
 ### Clone the project and install requirments.txt:
@@ -29,4 +29,8 @@ Python3 and pip is required to run the project
 After activating the virutal environment:  
 `(venv)$ cd <name of clone>`  
 `(venv)/<name of clone>$ pip3 install -r doc/requirements.txt`  
+
+### Run the project
+`$ cd <name of clone>` 
+`$ /<name of clone> # python3 app.py`  
   
