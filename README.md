@@ -10,6 +10,7 @@ Our website's purpose is to allow a user to explore nearby city bikes, the weath
 
 [MapQuest Open Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
 - We use this API to retrieve an image of a requested location.  
+- Note: requires a key, but project currently doesn't require users to register for their own key
 
 [Metaweather](https://www.metaweather.com/api/)
 - We use this API to retrieve weather of a requested location.
@@ -31,6 +32,6 @@ After activating the virutal environment:
 `(venv)/<name of clone>$ pip3 install -r doc/requirements.txt`  
 
 ### Run the project
-`$ cd <name of clone>` 
+`$ cd <name of clone>`   
 `$ /<name of clone> # python3 app.py`  
   
