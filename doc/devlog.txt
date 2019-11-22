@@ -66,3 +66,8 @@ liuH -- 2019-11-20 18:33
 
 liuH -- 2019-11-20 20:43
 - Created requirements.txt file and created a virtual environment to test it out
+
+chuC -- 2019-11-21 21:27
+- Added CSS to forms on login and register page
+- Added a footer
+- Added team flag to doc folder
