@@ -95,9 +95,10 @@ def addBike():
 def profile():
     entryList = updateSavedBikes()
     userList = updateUsers()
-    # saved is filtered list of all entries by specific user
+    # userSaved is filtered list of all entries by specific user
     toprint = ""
     userSaved = []
+    # goes through Saved bikes and if it is the users it appends it
     for entry in entryList:
         if entry[0] == session['user']:
             userSaved.append(entry)
@@ -160,7 +161,7 @@ def search():
         #           d = x
         #           break
         return render_template("searchresults.html", place = data['title'],
-                                applicable_date = weather['applicable_date'],
+                                applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
                                 # bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
                                 weather_state_name = weather['weather_state_name'],
                                 image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))

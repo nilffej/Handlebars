@@ -1,11 +1,25 @@
 {% extends "homepage.html" %}
 
-{% block searchresults %}
+{% block css %}
+<style>
+  .col-sm{
+    margin: 15px;
+  }
+</style>
+{% endblock %}
 
+{% block searchresults %}
 <div class="container-fluid" >
   <div class="row">
     <div class="col-sm border">
-      One of three columns
+      <div style="margin: 10px;">
+        <h1>Weather Information</h1>
+        <h2>{{place}}</h2>
+        <p>Date: {{applicable_date}}</p>
+        <p>Temperature: {{farenheit}} °F / {{celsius}} °C</p>
+        <p>Weather: {{weather_state_name}}</p>
+        <img src="{{image}}">
+      </div>
     </div>
     <div class="col-sm border">
       One of three columns
@@ -14,15 +28,5 @@
       One of three columns
     </div>
   </div>
-</div>
-
-<div style="margin: 10px;">
-  <h1>Weather Information</h1>
-  <h2>{{place}}</h2>
-  <p>{{applicable_date}}</p>
-  <p>Weather: {{weather_state_name}}</p>
-  <p>bikeNumber: {{bikeNumber}}</p>
-  <p>bikeID: {{bikeID}}</p>
-  <img src="{{image}}">
 </div>
 {% endblock %}
