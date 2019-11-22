@@ -33,5 +33,5 @@ After activating the virutal environment:
 
 ### Run the project
 `$ cd <name of clone>`   
-`$ /<name of clone> # python3 app.py`  
+`/<name of clone>$ python3 app.py`  
   
