@@ -5,11 +5,21 @@
   .col-sm{
     margin: 15px;
   }
+  .footer-copyright{
+    padding: 6px;
+    margin-top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: white; text-align: center;
+    border-top: solid;
+    border-color:lightgray;
+    border-width: 5px;
+  }
 </style>
 {% endblock %}
 
 {% block searchresults %}
-<div class="container-fluid" >
+<div class="container-fluid">
   <div class="row">
     <div class="col-sm border">
       <div style="margin: 10px;">
@@ -28,5 +38,9 @@
       One of three columns
     </div>
   </div>
+</div>
+<br>
+<div class="footer-copyright text-center py-3">
+  &copy Team HandleBars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu <br> "What does a bike and a rubber duck have in common? They both have a handlebar except for the duck."
 </div>
 {% endblock %}
