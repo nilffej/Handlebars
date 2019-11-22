@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 {% extends "template.html" %}
 
-{% block log %}
-<p>{{title}}</p>
-<p>{{heading}}</p>
-<p>{{entries}}</p>
-<p>{{to}}</p>
-<p>{{postNum}}</p>
-<p>{{sessionSatus}}</p>
+{% block body %}
+<h1><p>{{title}}</p></h1>
+{% for entry in toprint %}
+<div class="container-fluid" >
+  <div class="row">
+    <div class="col-sm border">
+      <div style="margin: 10px;">
+        {% for thing in entry %}
+        <p>{{thing}}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
 <form action="/addBike">
   <button type="submit">Submit</button>
 </form>
-
 {% endblock %}

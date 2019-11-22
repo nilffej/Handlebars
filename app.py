@@ -96,8 +96,8 @@ def profile():
     entryList = updateSavedBikes()
     userList = updateUsers()
     # userSaved is filtered list of all entries by specific user
-    toprint = ""
     userSaved = []
+    toprint = []
     # goes through Saved bikes and if it is the users it appends it
     for entry in entryList:
         if entry[0] == session['user']:
@@ -111,16 +111,12 @@ def profile():
           bikeList = foo.fetchall()
           for x in bikeList:
               if x[0] == entry[1]:
-                  cityName = x
-                  toprint += x[1]
-                  #toprint += x[1]
-                  #toprint += x[2]
-                  #toprint += x[3]
-                  #toprint += x[4]
-              break
+                  toprint.append(x)
+                  break
+
     return render_template("profile.html",
     title = "Profile - {}".format(session["user"]), heading = session["user"],
-    entries = userSaved, postNum = range(len(userSaved)), sessionstatus = "user" in session, to = toprint)
+    entries = userSaved, toprint = toprint)
 
 @app.route("/logout")
 def logout():
