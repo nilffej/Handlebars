@@ -2,25 +2,33 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Handlebars {% block title %}{% endblock %}</title>
-  </head>
+  </head><head>
+
   <body style="font-family: 'Helvetica', 'Arial', sans-serif;">
 
-    <table width="100%">
-      <tr>
-        <td width="70%">
-          <h1>Handlebars</h1>
-        </td>
+    <nav class="navbar navbar-expand-lg navbar-light pull-right" style="background-color: #5dade2;">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
 
-        <td align="right">
-          {% block headerbuttons %}
+          {% block buttons %}
           {% endblock %}
-        </td>
-      </tr>
-    </table>
+
+        </ul>
+      </div>
+    </nav>
 
     {% block body %}
     {% endblock %}
+
+    <br><br><br>
+    <center>
+      <footer>~ Team Handlebars ~</footer>
+    </center>
 
   </body>
 </html>

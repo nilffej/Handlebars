@@ -54,42 +54,7 @@ if c.fetchone()[0] < 1:
     db.commit()
     db.close()
 
-
-
 #-----------------------------------------------------------------
-@app.route("/test")
-def test():
-    with sqlite3.connect(DB_FILE) as db:
-        c = db.cursor()
-        c.execute('INSERT INTO SAVEDBIKES VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
-                                                                    i['id'],
-                                                                    i['location']['city'],
-                                                                    i['location']['country'],
-                                                                    i['name'],
-                                                                    i['location']['latitude'],
-                                                                    i['location']['longitude']
-                                                                    ))
-    db.commit()
-    db.close()
-
-
-
-@app.route("/")
-def root():
-    return render_template("homepage.html")
-
-
-##must set conditional, if not present then can save
-@app.route("/addBike")
-def addBike():
-    with sqlite3.connect(DB_FILE) as connection:
-        c = connection.cursor()
-        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
-        connection.commit()
-    return redirect(url_for("profile"))
-
-
-
 
 def updateSavedBikes():
     with sqlite3.connect(DB_FILE) as connection:
@@ -107,9 +72,25 @@ def updateUsers():
         userList.sort() # Usernames sorted in alphabetical order
         return userList
 
+#-----------------------------------------------------------------
+
+# DICTIONARY FOR IMPORTANT SEARCH DATA
+searchdict = {}
+
+@app.route("/")
+def root():
+    return render_template("homepage.html")
+
+# must set conditional, if not present then can save
+@app.route("/addBike")
+def addBike():
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
+        connection.commit()
+    return redirect(url_for("profile"))
+
 # Dispalys user's personal blog page and loads HTML with blog writing form
-
-
 @app.route("/profile")
 def profile():
     entryList = updateSavedBikes()
@@ -136,7 +117,6 @@ def profile():
                   #toprint += x[3]
                   #toprint += x[4]
               break
-
     return render_template("profile.html",
     title = "Profile - {}".format(session["user"]), heading = session["user"],
     entries = userSaved, postNum = range(len(userSaved)), sessionstatus = "user" in session, to = toprint)
@@ -150,72 +130,42 @@ def logout():
 @app.route("/search")
 def search():
     if request.args["searchbar"]:
-        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?query={}".format(request.args["searchbar"].replace(" ","%20")))
+        # GEOCODE API - COORDINATE TRACK
+        u = urllib.request.urlopen("http://open.mapquestapi.com/geocoding/v1/address?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&location={}".format(request.args["searchbar"].replace(" ","%20")))
         response = u.read()
         data = json.loads(response)
         if len(data) == 0:
             return redirect(url_for("root"))
+        firstresult = data["results"][0]["locations"][0]
+        searchdict["longlat"] = "{},{}".format(firstresult["latLng"]["lat"],firstresult["latLng"]["lng"])
+
+        # WEATHER API - WEATHER SEARCH
+        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(searchdict["longlat"]))
+        response = u.read()
+        data = json.loads(response)
         u = urllib.request.urlopen("https://www.metaweather.com/api/location/{}".format(data[0]["woeid"]))
         response = u.read()
         data = json.loads(response)
         weather = data['consolidated_weather'][0]
-        with sqlite3.connect(DB_FILE) as connection:
-          cur = connection.cursor()
-          q = "SELECT * FROM BIKES"
-          foo = cur.execute(q)
-          userList = foo.fetchall()
-          d = "none"
-          for x in userList:
-              if x[2] == request.args["searchbar"]:
-                  d = x
-                  break
+        print(weather)
 
+        # with sqlite3.connect(DB_FILE) as connection:
+        #   cur = connection.cursor()
+        #   q = "SELECT * FROM BIKES"
+        #   foo = cur.execute(q)
+        #   userList = foo.fetchall()
+        #   d = "none"
+        #   for x in userList:
+        #       if x[2] == request.args["searchbar"]:
+        #           d = x
+        #           break
         return render_template("searchresults.html", place = data['title'],
-                                latt_long = data['latt_long'],
                                 applicable_date = weather['applicable_date'],
-                                bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
+                                # bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
                                 weather_state_name = weather['weather_state_name'],
                                 image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))
-
     else:
         return redirect(url_for("root"))
-
-
-@app.route("/searchNSave")
-def searchNSave():
-    if request.args["searchbar"]:
-        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?query={}".format(request.args["searchbar"].replace(" ","%20")))
-        response = u.read()
-        data = json.loads(response)
-        if len(data) == 0:
-            return redirect(url_for("root"))
-        u = urllib.request.urlopen("https://www.metaweather.com/api/location/{}".format(data[0]["woeid"]))
-        response = u.read()
-        data = json.loads(response)
-        weather = data['consolidated_weather'][0]
-        with sqlite3.connect(DB_FILE) as connection:
-          cur = connection.cursor()
-          q = "SELECT * FROM BIKES"
-          foo = cur.execute(q)
-          userList = foo.fetchall()
-          d = "none"
-          for x in userList:
-              if x[2] == request.args["searchbar"]:
-                  d = x
-                  break
-        with sqlite3.connect(DB_FILE) as connection:
-            c = connection.cursor()
-            c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],d[0]))
-        return render_template("searchresults.html", place = data['title'],
-                                latt_long = data['latt_long'],
-                                applicable_date = weather['applicable_date'],
-                                bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
-                                weather_state_name = weather['weather_state_name'],
-                                image = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']))
-
-    else:
-        return redirect(url_for("root"))
-
 
 @app.route("/login")
 def login():
@@ -246,16 +196,6 @@ def login():
       return(redirect(url_for("login")))
 
   return render_template("login.html")
-
-
-def updateUsers():
-    with sqlite3.connect(DB_FILE) as connection:
-        cur = connection.cursor()
-        foo = cur.execute('SELECT username, password FROM USER;') # Selects all username/password combinations
-        userList = foo.fetchall()
-        userList.sort() # Usernames sorted in alphabetical order
-        return userList
-
 
 @app.route("/register")
 def register():
@@ -297,8 +237,6 @@ def addUser(user, pswd, conf):
   else:
     flash('Passwords do not match. Please try again.')
     return False
-
-
 
 if __name__ == "__main__":
     app.debug = True

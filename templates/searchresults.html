@@ -1,4 +1,4 @@
-{% extends "homepageTemplate.html" %}
+{% extends "homepage.html" %}
 
 {% block searchresults %}
 
@@ -20,21 +20,9 @@
   <h1>Weather Information</h1>
   <h2>{{place}}</h2>
   <p>{{applicable_date}}</p>
-  <p>Longitude/Lattitude: {{latt_long}}</p>
   <p>Weather: {{weather_state_name}}</p>
   <p>bikeNumber: {{bikeNumber}}</p>
   <p>bikeID: {{bikeID}}</p>
-  <p>name: {{name}}</p>
-  <p>country: {{country}}</p>
   <img src="{{image}}">
 </div>
-{% endblock %}
-
-{% block logout %}
-<form>
-  <button title="logout" type="submit" formaction="/logout">Logout</button>
-</form>
-<form action="/searchNSave">
-  <button type="submit">Submit</button>
-</form>
 {% endblock %}
