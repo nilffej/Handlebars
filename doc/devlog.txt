@@ -71,3 +71,6 @@ chuC -- 2019-11-21 21:27
 - Added CSS to forms on login and register page
 - Added a footer
 - Added team flag to doc folder
+
+chinK -- 2019-11-21 22:30
+- updated readme with APIs and requirements to run project
