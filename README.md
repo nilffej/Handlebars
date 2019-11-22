@@ -6,7 +6,7 @@ Our website's purpose is to allow a user to explore nearby city bikes, the weath
 
 ## APIs:
 [City Bike](http://api.citybik.es/v2/networks)   
-[Documentation] (http://api.citybik.es/v2/#filter)
+[Documentation](http://api.citybik.es/v2/#filter)
 - We use this API to retrieve information about city bikes as well as their longitude and latitude.
 
 [MapQuest Open Geocoding](https://developer.mapquest.com/documentation/open/geocoding-api/)
