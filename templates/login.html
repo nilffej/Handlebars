@@ -4,7 +4,7 @@
 {% block css %}
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <style>
-  .box {
+  .container {
     position:absolute;
     left:50%;
     top:50%;
@@ -42,7 +42,7 @@
 {% endif %}
 
 <center>
-  <form class="box" action="/login" method="GET">
+  <form class="container" action="/login" method="GET">
     Username<br>
   	<input class="form-control" type="text" name="username" placeholder="Username"><br>
     Password
@@ -56,4 +56,7 @@
 <center><b>{{ message }}</b></center>
 {% endfor %}
 
+<div style="position: absolute; bottom: 0; padding: 6px; margin-top: 0; width: 100%; background: rgba(0, 0, 0, 0.5); color: white; text-align: center; border-top: solid; border-color:lightgray; border-width: 5px;">
+   &copy Team HandleBars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu <br> "What does a bike and a rubber duck have in common? They both have a handlebar except for the duck."
+</div>
 {% endblock %}
