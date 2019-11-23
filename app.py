@@ -22,14 +22,24 @@ c = db.cursor()
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='USER' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE USER(username TEXT, password TEXT);")
+    c.execute("INSERT INTO USER VALUES ('{}', '{}')".format("hliu00","hi"))
+    c.execute("INSERT INTO USER VALUES ('{}', '{}')".format("hliu01","hi"))
 #Creates SAVEDBIKES
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='SAVEDBIKES' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE SAVEDBIKES(username TEXT, bikeNumber INTEGER);")
+    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu00",2))
+    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu00",1))
+    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu01",2))
+    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu01",1))
 #Creates REVIEWS
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='REVIEWS' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE REVIEWS(username TEXT, bikeID TEXT, location TEXT, rating INTEGER, content BLOB);")
+    c.execute("CREATE TABLE REVIEWS(username TEXT, bikeNumber INTEGER, rating INTEGER, content BLOB);")
+    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu00", 2, 5, "0dswdwdw"))
+    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu01", 2, 5, "1dswdwdw"))
+    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu00", 1, 4, "2dswdwdw"))
+    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu01", 1, 4, "3dswdwdw"))
 #Creates BIKES
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ''')
 if c.fetchone()[0] < 1:
@@ -39,18 +49,17 @@ if c.fetchone()[0] < 1:
     )
     response = u.read()
     data = json.loads(response)
-    with sqlite3.connect(DB_FILE) as db:
-        c = db.cursor()
-        for i in data['networks']:
-            # print(i['location']['city'])
-            c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
-                                                                        i['id'],
-                                                                        i['location']['city'],
-                                                                        i['location']['country'],
-                                                                        i['name'],
-                                                                        i['location']['latitude'],
-                                                                        i['location']['longitude']
-                                                                        ))
+    for i in data['networks']:
+        # print(i['location']['city'])
+        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
+                                                                    i['id'],
+                                                                    i['location']['city'],
+                                                                    i['location']['country'],
+                                                                    i['name'],
+                                                                    i['location']['latitude'],
+                                                                    i['location']['longitude']
+                                                                    ))
+
     db.commit()
     db.close()
 
@@ -82,6 +91,7 @@ def root():
     return render_template("homepage.html", sessionstatus = "user" in session)
 
 # must set conditional, if not present then can save
+##for testing
 @app.route("/addBike")
 def addBike():
     with sqlite3.connect(DB_FILE) as connection:
@@ -90,6 +100,14 @@ def addBike():
         connection.commit()
     return redirect(url_for("profile"))
 
+##for testing
+@app.route("/addReview")
+def addReview():
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format(session['user'], 2, 5, "dswdwdw"))
+        connection.commit()
+    return redirect(url_for("profile"))
 # Dispalys user's personal blog page and loads HTML with blog writing form
 @app.route("/profile")
 def profile():
@@ -150,14 +168,33 @@ def search():
            q = "SELECT * FROM BIKES"
            foo = cur.execute(q)
            userList = foo.fetchall()
-           bikes = []
+           bike = []
            for x in userList:
                if x[2] == request.args["searchbar"]:
-                   bikes.append(x)
+                   bike = x
+        with sqlite3.connect(DB_FILE) as connection:
+           cur = connection.cursor()
+           q = "SELECT * FROM REVIEWS"
+           foo = cur.execute(q)
+           reviewList = foo.fetchall()
+           specificBikeReviews = []
+           for review in reviewList:
+               if review[1] == bike[0]:
+                   specificBikeReviews.append(review)
+        numberOfRatings = 0
+        sum = 0
+        formattedReviews = []
+        for specificBikeReview in specificBikeReviews:
+            formattedReviews.append("(Review : '{}' Stars : '{}')".format(specificBikeReview[3],specificBikeReview[2]))
+            sum += specificBikeReview[2]
+            numberOfRatings += 1
+            connection.commit()
+
+
         return render_template("searchresults.html", place = data['title'],
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
-                                bikeNumber = bikes[0][0], bikeID = bikes[0][1], name = bikes[0][4], country = bikes[0][3], bikes = bikes,
-                                weather_state_name = weather['weather_state_name'],
+                                bikeNumber = bike[0], bikeID = bike[1], name = bike[4], country = bike[3], bike = bike,
+                                weather_state_name = weather['weather_state_name'], reviews = formattedReviews, rating = sum/numberOfRatings,
                                 weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
                                 mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=15&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']))
     else:

@@ -31,13 +31,30 @@
         <img src="{{ weatherimage }}">
     </div>
     <div class="col-sm border">
-      {% for bike in bikes %}
-      <p>{{bike}}</p>
-      {% endfor %}
+      <h1>Bike Information</h1>
+      <h3>Bike Company: {{bike[4]}}</h3>
     </div>
     <div class="col-sm border">
       <h1>Map</h1>
       <img src="{{ mapimage }}" width="80%" style="display: block; margin-left: auto; margin-right: auto;">
+    </div>
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm border">
+      <h1>Reviews</h1>
+      <h2>Rating: {{rating}}</h2>
+      {% for review in reviews %}
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm border">
+                <p>{{review}}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
     </div>
   </div>
 </div>
