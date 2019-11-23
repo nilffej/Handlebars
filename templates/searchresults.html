@@ -47,12 +47,16 @@
   <div class="row">
     <div class="col-sm border">
       <h1>Reviews</h1>
-      <h2>Rating: {{rating}}</h2>
+      <h2>Average Rating: {{rating}}</h2>
       {% for review in reviews %}
       <div class="container-fluid">
         <div class="row">
-          <div class="col-sm border">
-                <p>{{review}}</p>
+          <div class="col-md-10 border">
+                <p>{{review[0]}}</p>
+                <p>{{review[1]}}</p>
+          </div>
+          <div class="col-md-2 border">
+                <p>Place edit and remove review button here</p>
           </div>
         </div>
       </div>
