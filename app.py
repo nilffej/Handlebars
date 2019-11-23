@@ -162,16 +162,26 @@ def search():
         response = u.read()
         data = json.loads(response)
         weather = data['consolidated_weather'][0]
-        print(weather)
+        # print(weather)
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
-           q = "SELECT * FROM BIKES"
+           q = "SELECT city FROM BIKES"
            foo = cur.execute(q)
-           userList = foo.fetchall()
+           bikeList = foo.fetchall()
            bikes = []
-           for x in userList:
-               if x[2] == request.args["searchbar"]:
-                   bikes.append(x)
+           # print(userList)
+           for row in bikeList:
+               # print(row)
+               if row[0] == request.args["searchbar"]:
+                   print(row[0])
+                   bikes.append(row[0])
+                   q = "SELECT bikeID FROM BIKES WHERE city = '{}'".format(str(row[0]))
+                   foo = cur.execute(q)
+                   bikeID = foo.fetchall()
+                   session["bikeID"] = bikeID[0][0]
+                   # print(session["bikeID"])
+                       # print(row)
+
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
            q = "SELECT * FROM REVIEWS"
@@ -197,6 +207,8 @@ def search():
         if numberOfRatings == 0:
             rating = "No Reviews written yet"
         else: rating = sum/numberOfRatings
+        # session["bikeID"] = "2";
+        # print(session["bikeID"]);
         return render_template("searchresults.html", place = data['title'],
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
                                 bikes = bikes,
@@ -286,6 +298,8 @@ def addUser(user, pswd, conf):
   else:
     flash('Passwords do not match. Please try again.')
     return False
+
+
 
 if __name__ == "__main__":
     app.debug = True

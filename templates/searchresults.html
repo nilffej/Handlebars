@@ -33,9 +33,11 @@
     <div class="col-sm border">
       <h1>Bike Information</h1>
       {% for bike in bikes %}
-      <h3>Bike Company: {{bike[4]}}</h3>
+      <h3>Bike Company: {{bike}}</h3>
       {% endfor %}
-
+      <form class="box" action="/addReview" method="GET" align="center">
+        <button class="btn btn-success" type="submit">Add Review</button>
+      </form>
     </div>
     <div class="col-sm border">
       <h1>Map</h1>
@@ -61,8 +63,7 @@
         </div>
       </div>
       {% endfor %}
-
-    </div>
+  </div>
   </div>
 </div>
 <br>
