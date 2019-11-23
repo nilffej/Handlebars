@@ -31,7 +31,9 @@
         <img src="{{ weatherimage }}">
     </div>
     <div class="col-sm border">
-      One of three columns
+      {% for bike in bikes %}
+      <p>{{bike}}</p>
+      {% endfor %}
     </div>
     <div class="col-sm border">
       <h1>Map</h1>

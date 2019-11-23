@@ -145,20 +145,18 @@ def search():
         data = json.loads(response)
         weather = data['consolidated_weather'][0]
         print(weather)
-
-        # with sqlite3.connect(DB_FILE) as connection:
-        #   cur = connection.cursor()
-        #   q = "SELECT * FROM BIKES"
-        #   foo = cur.execute(q)
-        #   userList = foo.fetchall()
-        #   d = "none"
-        #   for x in userList:
-        #       if x[2] == request.args["searchbar"]:
-        #           d = x
-        #           break
+        with sqlite3.connect(DB_FILE) as connection:
+           cur = connection.cursor()
+           q = "SELECT * FROM BIKES"
+           foo = cur.execute(q)
+           userList = foo.fetchall()
+           bikes = []
+           for x in userList:
+               if x[2] == request.args["searchbar"]:
+                   bikes.append(x)
         return render_template("searchresults.html", place = data['title'],
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
-                                # bikeNumber = d[0], bikeID = d[1], name = d[4], country = d[3],
+                                bikeNumber = bikes[0][0], bikeID = bikes[0][1], name = bikes[0][4], country = bikes[0][3], bikes = bikes,
                                 weather_state_name = weather['weather_state_name'],
                                 weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
                                 mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=15&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']))

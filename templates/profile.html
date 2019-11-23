@@ -9,7 +9,11 @@
     <div class="col-sm border">
       <div style="margin: 10px;">
         {% for thing in entry %}
-        <p>{{thing}}</p>
+        <form class="box" action="/search" method="GET" align="center">
+        	<input class="form-control" type="password" name="searchbar" placeholder="Confirm Password"><br>
+        	<button class="btn btn-success" type="submit">See</button>
+        </form>
+        <p>{{thing[2]}}</p>
         {% endfor %}
       </div>
     </div>
