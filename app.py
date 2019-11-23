@@ -168,19 +168,20 @@ def search():
            q = "SELECT * FROM BIKES"
            foo = cur.execute(q)
            userList = foo.fetchall()
-           bike = []
+           bikes = []
            for x in userList:
                if x[2] == request.args["searchbar"]:
-                   bike = x
+                   bikes.append(x)
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
            q = "SELECT * FROM REVIEWS"
            foo = cur.execute(q)
            reviewList = foo.fetchall()
            specificBikeReviews = []
-           for review in reviewList:
-               if review[1] == bike[0]:
-                   specificBikeReviews.append(review)
+           if len(bikes) > 0:
+               for review in reviewList:
+                   if review[1] == bikes[0][0]:
+                       specificBikeReviews.append(review)
         numberOfRatings = 0
         sum = 0
         formattedReviews = []
@@ -189,12 +190,13 @@ def search():
             sum += specificBikeReview[2]
             numberOfRatings += 1
             connection.commit()
-
-
+        if numberOfRatings == 0:
+            rating = "No Reviews written yet"
+        else: rating = sum/numberOfRatings
         return render_template("searchresults.html", place = data['title'],
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
-                                bikeNumber = bike[0], bikeID = bike[1], name = bike[4], country = bike[3], bike = bike,
-                                weather_state_name = weather['weather_state_name'], reviews = formattedReviews, rating = sum/numberOfRatings,
+                                bikes = bikes,
+                                weather_state_name = weather['weather_state_name'], reviews = formattedReviews, rating = rating,
                                 weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
                                 mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=15&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']))
     else:
