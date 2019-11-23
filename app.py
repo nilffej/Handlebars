@@ -165,20 +165,20 @@ def search():
         # print(weather)
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
-           q = "SELECT city FROM BIKES"
+           q = "SELECT * FROM BIKES"
            foo = cur.execute(q)
            bikeList = foo.fetchall()
            bikes = []
            # print(userList)
            for row in bikeList:
                # print(row)
-               if row[0] == request.args["searchbar"]:
+               if row[2] == request.args["searchbar"]:
                    print(row[0])
-                   bikes.append(row[0])
-                   q = "SELECT bikeID FROM BIKES WHERE city = '{}'".format(str(row[0]))
+                   bikes.append(row)
+                   q = "SELECT bikeID FROM BIKES WHERE city = '{}'".format(str(row[2]))
                    foo = cur.execute(q)
                    bikeID = foo.fetchall()
-                   session["bikeID"] = bikeID[0][0]
+                   session["bikeID"] = bikeID[0]
                    # print(session["bikeID"])
                        # print(row)
 

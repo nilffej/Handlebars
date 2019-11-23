@@ -33,7 +33,7 @@
     <div class="col-sm border">
       <h1>Bike Information</h1>
       {% for bike in bikes %}
-      <h3>Bike Company: {{bike}}</h3>
+      <h3>Bike Company: {{bike[2]}}</h3>
       {% endfor %}
       <form class="box" action="/addReview" method="GET" align="center">
         <button class="btn btn-success" type="submit">Add Review</button>
