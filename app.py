@@ -163,6 +163,45 @@ def search():
     else:
         return redirect(url_for("root"))
 
+@app.route("/searchPost" , methods=['GET', 'POST'])
+def searchPost(city):
+    if True:
+        # GEOCODE API - COORDINATE TRACK
+        u = urllib.request.urlopen("http://open.mapquestapi.com/geocoding/v1/address?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&location={}".format(city.replace(" ","%20")))
+        response = u.read()
+        data = json.loads(response)
+        if len(data) == 0:
+            return redirect(url_for("root"))
+        firstresult = data["results"][0]["locations"][0]
+        searchdict["longlat"] = "{},{}".format(firstresult["latLng"]["lat"],firstresult["latLng"]["lng"])
+
+        # WEATHER API - WEATHER SEARCH
+        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(searchdict["longlat"]))
+        response = u.read()
+        data = json.loads(response)
+        u = urllib.request.urlopen("https://www.metaweather.com/api/location/{}".format(data[0]["woeid"]))
+        response = u.read()
+        data = json.loads(response)
+        weather = data['consolidated_weather'][0]
+        print(weather)
+        with sqlite3.connect(DB_FILE) as connection:
+           cur = connection.cursor()
+           q = "SELECT * FROM BIKES"
+           foo = cur.execute(q)
+           userList = foo.fetchall()
+           bikes = []
+           for x in userList:
+               if x[2] == city:
+                   bikes.append(x)
+        return render_template("searchresults.html", place = data['title'],
+                                applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
+                                bikeNumber = bikes[0][0], bikeID = bikes[0][1], name = bikes[0][4], country = bikes[0][3], bikes = bikes,
+                                weather_state_name = weather['weather_state_name'],
+                                weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
+                                mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=15&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']))
+    else:
+        return redirect(url_for("root"))
+
 @app.route("/login")
 def login():
   # if user already logged in, redirects back to discover
