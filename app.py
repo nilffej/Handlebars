@@ -201,12 +201,21 @@ def searchPost(city):
                                 mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=15&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']))
     else:
         return redirect(url_for("root"))
+@app.route("/loggedIn")
+def loggedIn():
+  # if user already logged in, redirects back to discover
+  if 'user' in session:
+      return render_template("loggedIn.html", sessionstatus = "user" in session)
+  else:
+      flash('Login unsuccessful')
+      return(redirect(url_for("login")))
+  return render_template("login.html")
 
 @app.route("/login")
 def login():
   # if user already logged in, redirects back to discover
   if 'user' in session:
-    return redirect(url_for('profile'))
+    return redirect(url_for('loggedIn'))
   # checking to see if things were submitted
   if (request.args):
     if (bool(request.args["username"]) and bool(request.args["password"])):
@@ -222,7 +231,7 @@ def login():
           if inpUser == row[0]:
             if inpPass == row[1]:
               session['user'] = inpUser
-              return(redirect(url_for("profile")))
+              return(redirect(url_for("loggedIn")))
             else:
               flash('Login credentials were incorrect. Please try again.')
               return(redirect(url_for("login")))
