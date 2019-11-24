@@ -22,44 +22,50 @@ c = db.cursor()
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='USER' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE USER(username TEXT, password TEXT);")
+    # TESTS
     c.execute("INSERT INTO USER VALUES ('{}', '{}')".format("hliu00","hi"))
     c.execute("INSERT INTO USER VALUES ('{}', '{}')".format("hliu01","hi"))
+
 #Creates SAVEDBIKES
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='SAVEDBIKES' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE SAVEDBIKES(username TEXT, bikeNumber INTEGER);")
+    # TESTS
     c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu00",2))
     c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu00",1))
     c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu01",2))
     c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu01",1))
+
 #Creates REVIEWS
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='REVIEWS' ''')
 if c.fetchone()[0] < 1:
     c.execute("CREATE TABLE REVIEWS(username TEXT, bikeNumber INTEGER, rating INTEGER, content BLOB);")
+    # TESTS
     c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu00", 2, 5, "0dswdwdw"))
     c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu01", 2, 5, "1dswdwdw"))
     c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu00", 1, 4, "2dswdwdw"))
     c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu01", 1, 4, "3dswdwdw"))
-#Creates BIKES
-c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ''')
-if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, bikeID TEXT,city TEXT, country TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
-    u = urllib.request.urlopen(
-        "http://api.citybik.es/v2/networks"
-    )
-    response = u.read()
-    data = json.loads(response)
-    for i in data['networks']:
-        # print(i['location']['city'])
-        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?, ?)', (None,
-                                                                    i['id'],
-                                                                    i['location']['city'],
-                                                                    i['location']['country'],
-                                                                    i['name'],
-                                                                    i['location']['latitude'],
-                                                                    i['location']['longitude']
-                                                                    ))
 
+#Creates BIKES
+c.execute(" SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ")
+if c.fetchone()[0] < 1:
+    c.execute("CREATE TABLE BIKES(bikeID TEXT, city TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
+    bikeapi = urllib.request.urlopen("http://api.citybik.es/v2/networks")
+    bikeresponse = bikeapi.read()
+    bikedata = json.loads(bikeresponse)
+    i = 0
+    for i in bikedata['networks']:
+        coors = "{},{}".format(i['location']['latitude'],i['location']['longitude'])
+        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(coors))
+        response = u.read()
+        data = json.loads(response)
+        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?)', (i['id'],
+                                                                data[0]["title"],
+                                                                i['name'],
+                                                                i['location']['latitude'],
+                                                                i['location']['longitude']
+                                                                ))
+    db.commit()
     db.commit()
     db.close()
 
@@ -90,6 +96,7 @@ searchdict = {}
 def root():
     return render_template("homepage.html", sessionstatus = "user" in session)
 
+<<<<<<< HEAD
 # must set conditional, if not present then can save
 ##for testing
 @app.route("/addBike")
@@ -164,6 +171,8 @@ def logout():
         session.pop('user')
     return redirect(url_for("root"))
 
+=======
+>>>>>>> 4bd41c16279ea88e988a36a486697c5795c87be6
 @app.route("/search")
 def search():
     if request.args["searchbar"]:
@@ -180,29 +189,26 @@ def search():
         u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(searchdict["longlat"]))
         response = u.read()
         data = json.loads(response)
+        city = data[0]["title"]
         u = urllib.request.urlopen("https://www.metaweather.com/api/location/{}".format(data[0]["woeid"]))
         response = u.read()
         data = json.loads(response)
         weather = data['consolidated_weather'][0]
-        # print(weather)
+
+        # BIKE DATABASE + API
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
-           q = "SELECT city FROM BIKES"
+           print(city)
+           q = "SELECT * FROM BIKES WHERE city = '{}'".format(city)
            foo = cur.execute(q)
            bikeList = foo.fetchall()
+           print(bikeList)
            bikes = []
-           # print(userList)
            for row in bikeList:
-               # print(row)
-               if row[0] == request.args["searchbar"]:
-                   print(row[0])
-                   bikes.append(row[0])
-                   q = "SELECT bikeID FROM BIKES WHERE city = '{}'".format(str(row[0]))
-                   foo = cur.execute(q)
-                   bikeID = foo.fetchall()
-                   session["bikeID"] = bikeID[0][0]
-                   # print(session["bikeID"])
-                       # print(row)
+               bikes.append(row)
+               # session["bikeID"] = bikeID[0]
+               # print(session["bikeID"])
+                   # print(row)
 
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
@@ -228,7 +234,7 @@ def search():
             temp = []
         if numberOfRatings == 0:
             rating = "No Reviews written yet"
-        else: rating = sum/numberOfRatings
+        else: rating = sum / numberOfRatings
         # session["bikeID"] = "2";
         # print(session["bikeID"]);
         return render_template("searchresults.html", place = data['title'],
@@ -236,22 +242,14 @@ def search():
                                 bikes = bikes,
                                 weather_state_name = weather['weather_state_name'], reviews = formattedReviews, rating = rating,
                                 weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
-                                mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=15&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']))
+                                mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=13&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']),
+                                sessionstatus = "user" in session)
     else:
         return redirect(url_for("root"))
 
-@app.route("/loggedIn")
-def loggedIn():
-  # if user already logged in, redirects back to discover
-  if 'user' in session:
-      return render_template("loggedIn.html", sessionstatus = "user" in session)
-  else:
-      flash('Login unsuccessful')
-      return(redirect(url_for("login")))
-  return render_template("login.html")
-
 @app.route("/login")
 def login():
+<<<<<<< HEAD
   # if user already logged in, redirects back to discover
   if 'user' in session:
     return redirect(url_for('loggedIn'))
@@ -276,6 +274,32 @@ def login():
       flash('Login unsuccessful')
       return(redirect(url_for("login")))
   return render_template("login.html")
+=======
+    # if user already logged in, redirects back to discover
+    if 'user' in session:
+        return redirect(url_for('root'))
+    # checking to see if things were submitted
+    if (request.args):
+        if (bool(request.args["username"]) and bool(request.args["password"])):
+            # setting request.args to variables to make life easier
+            inpUser = request.args["username"]
+            inpPass = request.args["password"]
+            with sqlite3.connect(DB_FILE) as connection:
+                cur = connection.cursor()
+                q = 'SELECT username, password FROM USER;'
+                foo = cur.execute(q)
+                userList = foo.fetchall()
+                for row in userList:
+                    if inpUser == row[0] and inpPass == row[1]:
+                        session['user'] = inpUser
+                        return(redirect(url_for("root")))
+                flash('Username not found or login credentials incorrect.')
+                return(redirect(url_for("login")))
+        else:
+            flash('Login unsuccessful')
+            return(redirect(url_for("login")))
+    return render_template("login.html")
+>>>>>>> 4bd41c16279ea88e988a36a486697c5795c87be6
 
 @app.route("/register")
 def register():
@@ -300,6 +324,13 @@ def register():
       flash('Please make sure to fill all fields!')
   return render_template("register.html")
 
+
+@app.route("/logout")
+def logout():
+    if "user" in session:
+        session.pop('user')
+    return redirect(url_for("root"))
+
 def addUser(user, pswd, conf):
   userList = updateUsers()
   for row in userList:
@@ -318,7 +349,51 @@ def addUser(user, pswd, conf):
     flash('Passwords do not match. Please try again.')
     return False
 
+# must set conditional, if not present then can save
+##for testing
+@app.route("/addBike")
+def addBike():
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
+        connection.commit()
+    return redirect(url_for("profile"))
 
+##for testing
+@app.route("/addReview")
+def addReview():
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format(session['user'], 2, 5, "dswdwdw"))
+        connection.commit()
+    return redirect(url_for("profile"))
+
+# Dispalys user's personal blog page and loads HTML with blog writing form
+@app.route("/profile")
+def profile():
+    entryList = updateSavedBikes()
+    userList = updateUsers()
+    # userSaved is filtered list of all entries by specific user
+    userSaved = []
+    toprint = []
+    # goes through Saved bikes and if it is the users it appends it
+    for entry in entryList:
+        if entry[0] == session['user']:
+            userSaved.append(entry)
+    for entry in userSaved:
+        cityName = ""
+        with sqlite3.connect(DB_FILE) as connection:
+          cur = connection.cursor()
+          q = "SELECT * FROM BIKES"
+          foo = cur.execute(q)
+          bikeList = foo.fetchall()
+          for x in bikeList:
+              if x[0] == entry[1]:
+                  toprint.append(x)
+                  break
+    return render_template("profile.html",
+    title = "Profile - {}".format(session["user"]), heading = session["user"],
+    entries = userSaved, toprint = toprint)
 
 if __name__ == "__main__":
     app.debug = True

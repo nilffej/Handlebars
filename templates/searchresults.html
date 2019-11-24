@@ -22,6 +22,7 @@
 {% block searchresults %}
 <div class="container-fluid">
   <div class="row">
+
     <div class="col-sm border">
         <h1>Weather Information</h1>
         <h2>{{place}}</h2>
@@ -30,21 +31,36 @@
         <p>Weather: {{weather_state_name}}</p>
         <img src="{{ weatherimage }}">
     </div>
+
     <div class="col-sm border">
       <h1>Bike Information</h1>
       {% for bike in bikes %}
-      <h3>Bike Company: {{bike}}</h3>
+
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">
+            <h3>{{ bike[2] }}</h3>
+            <p>Coordinates: {{ bike[3] }}, {{ bike[4] }}</p>
+          </div>
+          <div class="col">
+            <form class="box" action="/addReview" method="GET">
+              <button class="btn btn-success" type="submit" style="float: right;">Add Review</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
       {% endfor %}
-      <form class="box" action="/addReview" method="GET" align="center">
-        <button class="btn btn-success" type="submit">Add Review</button>
-      </form>
     </div>
+
     <div class="col-sm border">
       <h1>Map</h1>
       <img src="{{ mapimage }}" width="80%" style="display: block; margin-left: auto; margin-right: auto;">
     </div>
+
   </div>
 </div>
+
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm border">
