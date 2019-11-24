@@ -49,7 +49,7 @@ if c.fetchone()[0] < 1:
 #Creates BIKES
 c.execute(" SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ")
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, bikeID TEXT, city TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
+    c.execute("CREATE TABLE BIKES(bikeID TEXT, city TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
     bikeapi = urllib.request.urlopen("http://api.citybik.es/v2/networks")
     bikeresponse = bikeapi.read()
     bikedata = json.loads(bikeresponse)
@@ -59,13 +59,13 @@ if c.fetchone()[0] < 1:
         u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(coors))
         response = u.read()
         data = json.loads(response)
-        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?)', (None,
-                                                                i['id'],
+        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?)', (i['id'],
                                                                 data[0]["title"],
                                                                 i['name'],
                                                                 i['location']['latitude'],
                                                                 i['location']['longitude']
                                                                 ))
+    db.commit()
     db.commit()
     db.close()
 
@@ -172,33 +172,30 @@ def search():
 
 @app.route("/login")
 def login():
-  # if user already logged in, redirects back to discover
-  if 'user' in session:
-    return redirect(url_for('root'))
-  # checking to see if things were submitted
-  if (request.args):
-    if (bool(request.args["username"]) and bool(request.args["password"])):
-      # setting request.args to variables to make life easier
-      inpUser = request.args["username"]
-      inpPass = request.args["password"]
-      with sqlite3.connect(DB_FILE) as connection:
-        cur = connection.cursor()
-        q = 'SELECT username, password FROM USER;'
-        foo = cur.execute(q)
-        userList = foo.fetchall()
-        for row in userList:
-          if inpUser == row[0]:
-            if inpPass == row[1]:
-              session['user'] = inpUser
-              return(redirect(url_for("root")))
-            else:
-              flash('Login credentials were incorrect. Please try again.')
-              return(redirect(url_for("login")))
-    else:
-      flash('Login unsuccessful')
-      return(redirect(url_for("login")))
-
-  return render_template("login.html")
+    # if user already logged in, redirects back to discover
+    if 'user' in session:
+        return redirect(url_for('root'))
+    # checking to see if things were submitted
+    if (request.args):
+        if (bool(request.args["username"]) and bool(request.args["password"])):
+            # setting request.args to variables to make life easier
+            inpUser = request.args["username"]
+            inpPass = request.args["password"]
+            with sqlite3.connect(DB_FILE) as connection:
+                cur = connection.cursor()
+                q = 'SELECT username, password FROM USER;'
+                foo = cur.execute(q)
+                userList = foo.fetchall()
+                for row in userList:
+                    if inpUser == row[0] and inpPass == row[1]:
+                        session['user'] = inpUser
+                        return(redirect(url_for("root")))
+                flash('Username not found or login credentials incorrect.')
+                return(redirect(url_for("login")))
+        else:
+            flash('Login unsuccessful')
+            return(redirect(url_for("login")))
+    return render_template("login.html")
 
 @app.route("/register")
 def register():
@@ -290,7 +287,6 @@ def profile():
               if x[0] == entry[1]:
                   toprint.append(x)
                   break
-
     return render_template("profile.html",
     title = "Profile - {}".format(session["user"]), heading = session["user"],
     entries = userSaved, toprint = toprint)
