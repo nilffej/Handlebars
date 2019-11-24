@@ -13,23 +13,29 @@
 
 
 {% block body %}
-<h1><p>{{title}}</p></h1>
+<div style="margin: 15px;">
+
+<h1><p>{{ title }}</p></h1>
+
 <div class="container-fluid" >
 <div class="row">
-  <div class="col-sm border">
+
+  <div class="col-sm">
     <div style="margin: 10px;">
       <h2><p>My Bikes</p><h2>
+
       {% for entry in toprint %}
       <div class="container-fluid" >
         <div class="row">
-          <div class="col border">
+          <div class="col">
             <div style="margin: 10px;">
-              <h4><p>Bike Company : {{entry[3]}}</p><h4>
-              <h4><p>City : {{entry[2]}}</p><h4>
+              <h2><p>{{ entry[3] }}</p><h2>
+              <h4><p>{{ entry[5] }}</p><h4>
               <a href="http://127.0.0.1:5000/search?searchbar={{entry[2]}}"><button class="btn btn-primary">Go To {{entry[3]}}</button></a>
             </div>
           </div>
-          <div class="col-md-auto" style="text-align: center">
+
+          <div class="col-auto" style="text-align: center">
             <a href="http://127.0.0.1:5000/addReview?id={{entry[0]}}"><button class="btn btn-primary">Write a Review</button></a>
             <form action="/profile" method="GET">
               <button class="btn btn-danger" type="submit">Remove</button>
@@ -38,6 +44,7 @@
         </div>
       </div>
       {% endfor %}
+
     </div>
   </div>
 </div>
@@ -50,5 +57,7 @@
       </div>
     </div>
   </div>
+</div>
+
 </div>
 {% endblock %}

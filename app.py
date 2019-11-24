@@ -241,8 +241,6 @@ def addUser(user, pswd, conf):
     flash('Passwords do not match. Please try again.')
     return False
 
-# must set conditional, if not present then can save
-##for testing
 @app.route("/addBike")
 def addBike():
     with sqlite3.connect(DB_FILE) as connection:
@@ -251,7 +249,6 @@ def addBike():
         connection.commit()
     return redirect(url_for("profile"))
 
-##for testing
 @app.route("/addReview")
 def addReview():
     if (len(request.args) == 1):
@@ -313,10 +310,9 @@ def profile():
               if x[0] == entry[1]:
                   toprint.append(x)
                   break
-
     return render_template("profile.html",
     title = "Profile - {}".format(session["user"]), heading = session["user"],
-    entries = userSaved, toprint = toprint)
+    entries = userSaved, toprint = toprint, sessionstatus = "user" in session)
 
 if __name__ == "__main__":
     app.debug = True
