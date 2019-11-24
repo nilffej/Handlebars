@@ -49,7 +49,7 @@ if c.fetchone()[0] < 1:
 #Creates BIKES
 c.execute(" SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ")
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE BIKES(bikeID TEXT, city TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
+    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, bikeID TEXT, city TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
     bikeapi = urllib.request.urlopen("http://api.citybik.es/v2/networks")
     bikeresponse = bikeapi.read()
     bikedata = json.loads(bikeresponse)
@@ -59,12 +59,13 @@ if c.fetchone()[0] < 1:
         u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(coors))
         response = u.read()
         data = json.loads(response)
-        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?)', (i['id'],
-                                                                data[0]["title"],
-                                                                i['name'],
-                                                                i['location']['latitude'],
-                                                                i['location']['longitude']
-                                                                ))
+        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?)', (None,
+                                                               i['id'],
+                                                               data[0]["title"],
+                                                               i['name'],
+                                                               i['location']['latitude'],
+                                                               i['location']['longitude']
+                                                               ))
     db.commit()
     db.commit()
     db.close()
@@ -95,79 +96,6 @@ searchdict = {}
 @app.route("/")
 def root():
     return render_template("homepage.html", sessionstatus = "user" in session)
-
-# must set conditional, if not present then can save
-##for testing
-@app.route("/addBike")
-def addBike():
-    with sqlite3.connect(DB_FILE) as connection:
-        c = connection.cursor()
-        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
-        connection.commit()
-    return redirect(url_for("profile"))
-
-##for testing
-@app.route("/addReview")
-def addReview():
-    if (len(request.args) == 1):
-        with sqlite3.connect(DB_FILE) as connection:
-            c = connection.cursor()
-            comp = c.execute("SELECT * FROM BIKES WHERE bikeNumber = (?)", (request.args["id"],)).fetchone()[4]
-            c.execute("SELECT * FROM REVIEWS WHERE username = (?) AND bikeNumber = (?)", (session['user'], request.args["id"]))
-            l = c.fetchone()
-            if (len(l) > 0) :
-                return render_template("addreview.html", name = comp, i = request.args["id"], b = l[3])
-            else: return render_template("addreview.html", name = comp, i = request.args["id"])
-    if (len(request.args) >= 2):
-        if (len(request.args["body"]) == 0):
-            flash('Cannot leave body empty.')
-            return redirect("http://127.0.0.1:5000/addReview?id=" + request.args["id"])
-        else:
-            if (len(request.args) == 2): rating = 0
-            else: rating = request.args["rate"]
-            with sqlite3.connect(DB_FILE) as connection:
-                c = connection.cursor()
-                c.execute("DELETE FROM REVIEWS WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["id"]))
-                c.execute("INSERT INTO REVIEWS VALUES (?, ?, ?, ?)", (session['user'], request.args["id"], rating, request.args["body"]))
-            return redirect(url_for("profile"))
-    with sqlite3.connect(DB_FILE) as connection:
-        c = connection.cursor()
-        c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format(session['user'], 2, 5, "dswdwdw"))
-        connection.commit()
-    return redirect(url_for("profile"))
-# Dispalys user's personal blog page and loads HTML with blog writing form
-@app.route("/profile")
-def profile():
-    entryList = updateSavedBikes()
-    userList = updateUsers()
-    # userSaved is filtered list of all entries by specific user
-    userSaved = []
-    toprint = []
-    # goes through Saved bikes and if it is the users it appends it
-    for entry in entryList:
-        if entry[0] == session['user']:
-            userSaved.append(entry)
-    for entry in userSaved:
-        cityName = ""
-        with sqlite3.connect(DB_FILE) as connection:
-          cur = connection.cursor()
-          q = "SELECT * FROM BIKES"
-          foo = cur.execute(q)
-          bikeList = foo.fetchall()
-          for x in bikeList:
-              if x[0] == entry[1]:
-                  toprint.append(x)
-                  break
-
-    return render_template("profile.html",
-    title = "Profile - {}".format(session["user"]), heading = session["user"],
-    entries = userSaved, toprint = toprint)
-
-@app.route("/logout")
-def logout():
-    if "user" in session:
-        session.pop('user')
-    return redirect(url_for("root"))
 
 @app.route("/search")
 def search():
@@ -294,6 +222,12 @@ def register():
   return render_template("register.html")
 
 
+@app.route("/logout")
+def logout():
+    if "user" in session:
+        session.pop('user')
+    return redirect(url_for("root"))
+
 def addUser(user, pswd, conf):
   userList = updateUsers()
   for row in userList:
@@ -312,6 +246,81 @@ def addUser(user, pswd, conf):
     flash('Passwords do not match. Please try again.')
     return False
 
+# must set conditional, if not present then can save
+##for testing
+@app.route("/addBike")
+def addBike():
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
+        connection.commit()
+    return redirect(url_for("profile"))
+
+##for testing
+@app.route("/addReview")
+def addReview():
+    if (len(request.args) == 1):
+        with sqlite3.connect(DB_FILE) as connection:
+            c = connection.cursor()
+            n = c.execute("SELECT * FROM BIKES WHERE bikeNumber = (?)", (request.args["id"],)).fetchone()[3]
+            loc = c.execute("SELECT * FROM BIKES WHERE bikeNumber = (?)", (request.args["id"],)).fetchone()[2]
+            c.execute("SELECT * FROM REVIEWS WHERE username = (?) AND bikeNumber = (?)", (session['user'], request.args["id"]))
+            l = c.fetchall()
+            if (len(l) > 0) :
+                return render_template("addreview.html", name = n, location = loc, i = request.args["id"], b = l[0][3])
+            else: return render_template("addreview.html", name = n, location = loc, i = request.args["id"])
+    if (len(request.args) >= 2):
+        if (len(request.args["body"]) == 0):
+            flash('Cannot leave body empty.')
+            return redirect("http://127.0.0.1:5000/addReview?id=" + request.args["id"])
+        else:
+            if (len(request.args) == 2): rating = 0
+            else: rating = request.args["rate"]
+            with sqlite3.connect(DB_FILE) as connection:
+                c = connection.cursor()
+                c.execute("DELETE FROM REVIEWS WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["id"]))
+                c.execute("INSERT INTO REVIEWS VALUES (?, ?, ?, ?)", (session['user'], request.args["id"], rating, request.args["body"]))
+                connection.commit()
+            return redirect(url_for("profile"))
+    with sqlite3.connect(DB_FILE) as connection:
+        c = connection.cursor()
+        c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format(session['user'], 2, 5, "dswdwdw"))
+        connection.commit()
+    return redirect(url_for("profile"))
+# Dispalys user's personal blog page and loads HTML with blog writing form
+@app.route("/profile")
+def profile():
+    if (len(request.args) == 1):
+        with sqlite3.connect(DB_FILE) as connection:
+            c = connection.cursor()
+            c.execute("SELECT * FROM SAVEDBIKES WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["id"]))
+            if (len(c.fetchall()) == 0):
+                c.execute("INSERT INTO SAVEDBIKES VALUES (?, ?)", (session["user"], request.args["id"]))
+            connection.commit()
+    entryList = updateSavedBikes()
+    userList = updateUsers()
+    # userSaved is filtered list of all entries by specific user
+    userSaved = []
+    toprint = []
+    # goes through Saved bikes and if it is the users it appends it
+    for entry in entryList:
+        if entry[0] == session['user']:
+            userSaved.append(entry)
+    for entry in userSaved:
+        cityName = ""
+        with sqlite3.connect(DB_FILE) as connection:
+          cur = connection.cursor()
+          q = "SELECT * FROM BIKES"
+          foo = cur.execute(q)
+          bikeList = foo.fetchall()
+          for x in bikeList:
+              if x[0] == entry[1]:
+                  toprint.append(x)
+                  break
+
+    return render_template("profile.html",
+    title = "Profile - {}".format(session["user"]), heading = session["user"],
+    entries = userSaved, toprint = toprint)
 
 if __name__ == "__main__":
     app.debug = True

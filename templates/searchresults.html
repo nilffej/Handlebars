@@ -43,8 +43,9 @@
             <p>Coordinates: {{ bike[3] }}, {{ bike[4] }}</p>
           </div>
           <div class="col">
-            <form class="box" action="/addReview" method="GET">
-              <button class="btn btn-success" type="submit" style="float: right;">Add Review</button>
+            <form class="box" action="/profile" method="GET">
+              <input type="hidden" name="id" value="{{bike[0]}}">
+              <button class="btn btn-success" type="submit" style="float: right;">Add to My Bikes</button>
             </form>
           </div>
         </div>
