@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+{% extends "template.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+
+  .container {
+    background-color: transparent;
+  }
+  .custom-select {
+    width: 10%;
+  }
+  *{
+    margin: 0;
+    padding: 0;
+}
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+</style>
+{% endblock %}
+
+{% block title %} | Add Review{% endblock %}
+
+{% block buttons %}
+<li class="nav-item">
+  <a href="{{ url_for('root') }}" class="nav-link">Home</a>
+</li>
+
+<li class="nav-item">
+  <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+</li>
+{% endblock %}
+
+{% block body %}
+
+{% if msg %}
+<h3>{{ msg }}</h3>
+{% endif %}
+
+<center>
+  <form class="container" action="/addReview" method="GET">
+    Write a review for <b> {{name}} </b>, {{location}} <br>
+           <input type="hidden" name="id" value="{{i}}">
+           <textarea class="form-control" aria-label="With textarea"
+           rows = "5"
+           cols = "60"
+           name = "body">{{b}}</textarea>
+          <div class="rate">
+            <input type="radio" id="star5" name="rate" value="5" />
+            <label for="star5" title="5">5 stars</label>
+            <input type="radio" id="star4" name="rate" value="4" />
+            <label for="star4" title="4">4 stars</label>
+            <input type="radio" id="star3" name="rate" value="3" />
+            <label for="star3" title="3">3 stars</label>
+            <input type="radio" id="2" name="rate" value="2" />
+            <label for="star2" title="text">2 stars</label>
+            <input type="radio" id="star1" name="rate" value="1" />
+            <label for="star1" title="1">1 star</label>
+          </div>
+          <br><br><br>
+          <button class="btn btn-success" type="submit">Submit</button>
+  </form>
+</center>
+
+{% for message in get_flashed_messages() %}
+<br><br>
+<center><b>{{ message }}</b></center>
+{% endfor %}
+
+<div style="position: absolute; bottom: 0; padding: 6px; margin-top: 0; width: 100%; background: rgba(0, 0, 0, 0.5); color: white; text-align: center; border-top: solid; border-color:lightgray; border-width: 5px;">
+   &copy Team HandleBars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu <br> "What do a bike and a rubber duck have in common? Both have handlebars, except for the duck."
+</div>
+{% endblock %}

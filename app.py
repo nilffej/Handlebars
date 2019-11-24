@@ -103,6 +103,27 @@ def addBike():
 ##for testing
 @app.route("/addReview")
 def addReview():
+    if (len(request.args) == 1):
+        with sqlite3.connect(DB_FILE) as connection:
+            c = connection.cursor()
+            comp = c.execute("SELECT * FROM BIKES WHERE bikeNumber = (?)", (request.args["id"],)).fetchone()[4]
+            c.execute("SELECT * FROM REVIEWS WHERE username = (?) AND bikeNumber = (?)", (session['user'], request.args["id"]))
+            l = c.fetchone()
+            if (len(l) > 0) :
+                return render_template("addreview.html", name = comp, i = request.args["id"], b = l[3])
+            else: return render_template("addreview.html", name = comp, i = request.args["id"])
+    if (len(request.args) >= 2):
+        if (len(request.args["body"]) == 0):
+            flash('Cannot leave body empty.')
+            return redirect("http://127.0.0.1:5000/addReview?id=" + request.args["id"])
+        else:
+            if (len(request.args) == 2): rating = 0
+            else: rating = request.args["rate"]
+            with sqlite3.connect(DB_FILE) as connection:
+                c = connection.cursor()
+                c.execute("DELETE FROM REVIEWS WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["id"]))
+                c.execute("INSERT INTO REVIEWS VALUES (?, ?, ?, ?)", (session['user'], request.args["id"], rating, request.args["body"]))
+            return redirect(url_for("profile"))
     with sqlite3.connect(DB_FILE) as connection:
         c = connection.cursor()
         c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format(session['user'], 2, 5, "dswdwdw"))
@@ -120,6 +141,7 @@ def profile():
     for entry in entryList:
         if entry[0] == session['user']:
             userSaved.append(entry)
+        print(userSaved)
     for entry in userSaved:
         cityName = ""
         with sqlite3.connect(DB_FILE) as connection:
@@ -245,17 +267,14 @@ def login():
         foo = cur.execute(q)
         userList = foo.fetchall()
         for row in userList:
-          if inpUser == row[0]:
-            if inpPass == row[1]:
-              session['user'] = inpUser
-              return(redirect(url_for("loggedIn")))
-            else:
-              flash('Login credentials were incorrect. Please try again.')
-              return(redirect(url_for("login")))
+          if inpUser == row[0] and inpPass == row[1]:
+             session['user'] = inpUser
+             return(redirect(url_for("loggedIn")))
+        flash('Login credentials were incorrect.')
+        return(redirect(url_for("login")))
     else:
       flash('Login unsuccessful')
       return(redirect(url_for("login")))
-
   return render_template("login.html")
 
 @app.route("/register")

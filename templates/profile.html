@@ -22,12 +22,18 @@
       {% for entry in toprint %}
       <div class="container-fluid" >
         <div class="row">
-          <div class="col-sm border">
+          <div class="col border">
             <div style="margin: 10px;">
               <h4><p>Bike Company : {{entry[4]}}</p><h4>
               <h4><p>City : {{entry[2]}}</p><h4>
-              <a href="http://127.0.0.1:5000/search?searchbar={{entry[2]}}" class="button">See {{entry[4]}}</a>
+              <a href="http://127.0.0.1:5000/search?searchbar={{entry[2]}}"><button class="btn btn-primary">Go To {{entry[4]}}</button></a>
             </div>
+          </div>
+          <div class="col-md-auto" style="text-align: center">
+            <a href="http://127.0.0.1:5000/addReview?id={{entry[0]}}"><button class="btn btn-primary">Write a Review</button></a>
+            <form action="/profile" method="GET">
+              <button class="btn btn-danger" type="submit">Remove</button>
+            </form>
           </div>
         </div>
       </div>
