@@ -96,7 +96,6 @@ searchdict = {}
 def root():
     return render_template("homepage.html", sessionstatus = "user" in session)
 
-<<<<<<< HEAD
 # must set conditional, if not present then can save
 ##for testing
 @app.route("/addBike")
@@ -148,7 +147,6 @@ def profile():
     for entry in entryList:
         if entry[0] == session['user']:
             userSaved.append(entry)
-        print(userSaved)
     for entry in userSaved:
         cityName = ""
         with sqlite3.connect(DB_FILE) as connection:
@@ -171,8 +169,6 @@ def logout():
         session.pop('user')
     return redirect(url_for("root"))
 
-=======
->>>>>>> 4bd41c16279ea88e988a36a486697c5795c87be6
 @app.route("/search")
 def search():
     if request.args["searchbar"]:
@@ -249,32 +245,6 @@ def search():
 
 @app.route("/login")
 def login():
-<<<<<<< HEAD
-  # if user already logged in, redirects back to discover
-  if 'user' in session:
-    return redirect(url_for('loggedIn'))
-  # checking to see if things were submitted
-  if (request.args):
-    if (bool(request.args["username"]) and bool(request.args["password"])):
-      # setting request.args to variables to make life easier
-      inpUser = request.args["username"]
-      inpPass = request.args["password"]
-      with sqlite3.connect(DB_FILE) as connection:
-        cur = connection.cursor()
-        q = 'SELECT username, password FROM USER;'
-        foo = cur.execute(q)
-        userList = foo.fetchall()
-        for row in userList:
-          if inpUser == row[0] and inpPass == row[1]:
-             session['user'] = inpUser
-             return(redirect(url_for("loggedIn")))
-        flash('Login credentials were incorrect.')
-        return(redirect(url_for("login")))
-    else:
-      flash('Login unsuccessful')
-      return(redirect(url_for("login")))
-  return render_template("login.html")
-=======
     # if user already logged in, redirects back to discover
     if 'user' in session:
         return redirect(url_for('root'))
@@ -299,7 +269,6 @@ def login():
             flash('Login unsuccessful')
             return(redirect(url_for("login")))
     return render_template("login.html")
->>>>>>> 4bd41c16279ea88e988a36a486697c5795c87be6
 
 @app.route("/register")
 def register():
@@ -325,12 +294,6 @@ def register():
   return render_template("register.html")
 
 
-@app.route("/logout")
-def logout():
-    if "user" in session:
-        session.pop('user')
-    return redirect(url_for("root"))
-
 def addUser(user, pswd, conf):
   userList = updateUsers()
   for row in userList:
@@ -349,51 +312,6 @@ def addUser(user, pswd, conf):
     flash('Passwords do not match. Please try again.')
     return False
 
-# must set conditional, if not present then can save
-##for testing
-@app.route("/addBike")
-def addBike():
-    with sqlite3.connect(DB_FILE) as connection:
-        c = connection.cursor()
-        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
-        connection.commit()
-    return redirect(url_for("profile"))
-
-##for testing
-@app.route("/addReview")
-def addReview():
-    with sqlite3.connect(DB_FILE) as connection:
-        c = connection.cursor()
-        c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format(session['user'], 2, 5, "dswdwdw"))
-        connection.commit()
-    return redirect(url_for("profile"))
-
-# Dispalys user's personal blog page and loads HTML with blog writing form
-@app.route("/profile")
-def profile():
-    entryList = updateSavedBikes()
-    userList = updateUsers()
-    # userSaved is filtered list of all entries by specific user
-    userSaved = []
-    toprint = []
-    # goes through Saved bikes and if it is the users it appends it
-    for entry in entryList:
-        if entry[0] == session['user']:
-            userSaved.append(entry)
-    for entry in userSaved:
-        cityName = ""
-        with sqlite3.connect(DB_FILE) as connection:
-          cur = connection.cursor()
-          q = "SELECT * FROM BIKES"
-          foo = cur.execute(q)
-          bikeList = foo.fetchall()
-          for x in bikeList:
-              if x[0] == entry[1]:
-                  toprint.append(x)
-                  break
-    return render_template("profile.html",
-    title = "Profile - {}".format(session["user"]), heading = session["user"],
-    entries = userSaved, toprint = toprint)
 
 if __name__ == "__main__":
     app.debug = True
