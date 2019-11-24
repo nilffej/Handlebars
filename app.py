@@ -49,23 +49,21 @@ if c.fetchone()[0] < 1:
 #Creates BIKES
 c.execute(" SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ")
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, bikeID TEXT, city TEXT, name TEXT, latitude FLOAT, longitude FLOAT);")
+    c.execute("CREATE TABLE BIKES(bikeNumber INTEGER PRIMARY KEY AUTOINCREMENT, bikeID TEXT, city TEXT, name TEXT, coors TEXT, address TEXT);")
     bikeapi = urllib.request.urlopen("http://api.citybik.es/v2/networks")
     bikeresponse = bikeapi.read()
     bikedata = json.loads(bikeresponse)
-    i = 0
     for i in bikedata['networks']:
         coors = "{},{}".format(i['location']['latitude'],i['location']['longitude'])
-        u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(coors))
-        response = u.read()
-        data = json.loads(response)
-        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?)', (None,
-                                                               i['id'],
-                                                               data[0]["title"],
-                                                               i['name'],
-                                                               i['location']['latitude'],
-                                                               i['location']['longitude']
-                                                               ))
+        weatherapi = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(coors))
+        response = weatherapi.read()
+        weatherdata = json.loads(response)
+        mapapi = urllib.request.urlopen("https://www.mapquestapi.com/geocoding/v1/reverse?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&location={}".format(coors))
+        response = mapapi.read()
+        mapdata = json.loads(response)
+        spotinfo = mapdata["results"][0]["locations"][0]
+        address = "{}, {}".format(spotinfo["street"],spotinfo["adminArea5"])
+        c.execute('INSERT INTO BIKES VALUES (?, ?, ?, ?, ?, ?)', (None, i['id'], weatherdata[0]["title"], i['name'], coors, address))
     db.commit()
     db.commit()
     db.close()
@@ -122,50 +120,47 @@ def search():
         # BIKE DATABASE + API
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
-           print(city)
            q = "SELECT * FROM BIKES WHERE city = '{}'".format(city)
            foo = cur.execute(q)
            bikeList = foo.fetchall()
-           print(bikeList)
            bikes = []
-           for row in bikeList:
-               bikes.append(row)
-               # session["bikeID"] = bikeID[0]
-               # print(session["bikeID"])
-                   # print(row)
+           addresses = []
+           for bike in bikeList:
+               bikes.append(bike)
 
-        with sqlite3.connect(DB_FILE) as connection:
-           cur = connection.cursor()
-           q = "SELECT * FROM REVIEWS"
-           foo = cur.execute(q)
-           reviewList = foo.fetchall()
-           specificBikeReviews = []
-           if len(bikes) > 0:
-               for review in reviewList:
-                   if review[1] == bikes[0][0]:
-                       specificBikeReviews.append(review)
-        numberOfRatings = 0
-        sum = 0
-        formattedReviews = []
-        temp = []
-        for specificBikeReview in specificBikeReviews:
-            temp.append("Stars : {}".format(specificBikeReview[2]))
-            temp.append("Review : {}".format(specificBikeReview[3]))
-            formattedReviews.append(temp)
-            sum += specificBikeReview[2]
-            numberOfRatings += 1
-            connection.commit()
-            temp = []
-        if numberOfRatings == 0:
-            rating = "No Reviews written yet"
-        else: rating = sum / numberOfRatings
+
+        # with sqlite3.connect(DB_FILE) as connection:
+        #    cur = connection.cursor()
+        #    q = "SELECT * FROM REVIEWS"
+        #    foo = cur.execute(q)
+        #    reviewList = foo.fetchall()
+        #    specificBikeReviews = []
+        #    if len(bikes) > 0:
+        #        for review in reviewList:
+        #            if review[1] == bikes[0][0]:
+        #                specificBikeReviews.append(review)
+        # numberOfRatings = 0
+        # sum = 0
+        # formattedReviews = []
+        # temp = []
+        # for specificBikeReview in specificBikeReviews:
+        #     temp.append("Stars : {}".format(specificBikeReview[2]))
+        #     temp.append("Review : {}".format(specificBikeReview[3]))
+        #     formattedReviews.append(temp)
+        #     sum += specificBikeReview[2]
+        #     numberOfRatings += 1
+        #     connection.commit()
+        #     temp = []
+        # if numberOfRatings == 0:
+        #     rating = "No Reviews written yet"
+        # else: rating = sum / numberOfRatings
         # session["bikeID"] = "2";
         # print(session["bikeID"]);
         return render_template("searchresults.html", place = data['title'],
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
                                 bikes = bikes,
-                                weather_state_name = weather['weather_state_name'], reviews = formattedReviews, rating = rating,
-                                weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
+                                weather_state_name = weather['weather_state_name'], weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
+                                # reviews = formattedReviews, rating = rating,
                                 mapimage = "https://www.mapquestapi.com/staticmap/v4/getmap?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&size=600,600&type=map&imagetype=jpg&zoom=13&scalebar=true&traffic=FLOW|CON|INC&center={}&xis=&ellipse=fill:0x70ff0000|color:0xff0000|width:2|40.00,-105.25,40.04,-105.30".format(searchdict['longlat']),
                                 sessionstatus = "user" in session)
     else:
@@ -287,6 +282,7 @@ def addReview():
         c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format(session['user'], 2, 5, "dswdwdw"))
         connection.commit()
     return redirect(url_for("profile"))
+
 # Dispalys user's personal blog page and loads HTML with blog writing form
 @app.route("/profile")
 def profile():
