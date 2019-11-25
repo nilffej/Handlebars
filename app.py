@@ -286,9 +286,12 @@ def profile():
     if (len(request.args) == 1):
         with sqlite3.connect(DB_FILE) as connection:
             c = connection.cursor()
-            c.execute("SELECT * FROM SAVEDBIKES WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["id"]))
-            if (len(c.fetchall()) == 0):
-                c.execute("INSERT INTO SAVEDBIKES VALUES (?, ?)", (session["user"], request.args["id"]))
+            if ("id" in request.args.keys()):
+                c.execute("SELECT * FROM SAVEDBIKES WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["id"]))
+                if (len(c.fetchall()) == 0):
+                    c.execute("INSERT INTO SAVEDBIKES VALUES (?, ?)", (session["user"], request.args["id"]))
+            else if ("rid" in request.args.keys()):
+
             connection.commit()
     entryList = updateSavedBikes()
     userList = updateUsers()
