@@ -294,8 +294,8 @@ def profile():
                 c.execute("SELECT * FROM SAVEDBIKES WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["id"]))
                 if (len(c.fetchall()) == 0):
                     c.execute("INSERT INTO SAVEDBIKES VALUES (?, ?)", (session["user"], request.args["id"]))
-            else if ("rid" in request.args.keys()):
-
+            if ("rid" in request.args.keys()):
+                c.execute("DELETE FROM SAVEDBIKES WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["rid"]))
             connection.commit()
     entryList = updateSavedBikes()
     userList = updateUsers()
