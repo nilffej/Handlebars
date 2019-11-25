@@ -29,6 +29,7 @@
 </div>
 </a>
 
+{% if sessionstatus %}
 <h2 style="text-align: center;">Search a Location</h2>
 
 <form class="active-cyan-3 active-cyan-4" action="/search" style="text-align: center; margin-bottom: 50px;">
@@ -42,5 +43,17 @@
    &copy Team HandleBars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu <br> "What do a bike and a rubber duck have in common? They both have a handlebar except for the duck."
 </div>
 {% endblock %}
+
+{% else %}
+<center>
+<h4>Log in to Handlebars to search for bikes.</h4>
+<br>
+<a href="{{ url_for('login') }}"><button type="button" class="btn btn-success">Log In</button></a>
+<br>
+<br>
+<p>Don't have an account? <a href="{{ url_for('register') }}">Register here.</a></p>
+</center>
+{% endif %}
+
 
 {% endblock %}

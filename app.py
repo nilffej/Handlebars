@@ -97,7 +97,7 @@ def root():
 
 @app.route("/search")
 def search():
-    if request.args["searchbar"]:
+    if request.args and request.args["searchbar"]:
         # GEOCODE API - COORDINATE TRACK
         u = urllib.request.urlopen("http://open.mapquestapi.com/geocoding/v1/address?key=GiP6vYcbAdnVUtnHGJwYdvAdAxupOahM&location={}".format(request.args["searchbar"].replace(" ","%20")))
         response = u.read()
@@ -251,6 +251,8 @@ def addBike():
 
 @app.route("/addReview")
 def addReview():
+    if "user" not in session:
+        return redirect(url_for('root'))
     if (len(request.args) == 1):
         with sqlite3.connect(DB_FILE) as connection:
             c = connection.cursor()
@@ -283,6 +285,8 @@ def addReview():
 # Dispalys user's personal blog page and loads HTML with blog writing form
 @app.route("/profile")
 def profile():
+    if "user" not in session:
+        return redirect(url_for('root'))
     if (len(request.args) == 1):
         with sqlite3.connect(DB_FILE) as connection:
             c = connection.cursor()
