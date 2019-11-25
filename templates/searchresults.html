@@ -34,6 +34,10 @@
 
     <div class="col-lg border">
       <h1>Bike Information</h1>
+      {% if bikes|length == 0 %}
+      <br>
+      <p>No bikes found at this location.</p>
+      {% else %}
       {% for bike in bikes %}
 
       <div class="container-fluid">
@@ -52,6 +56,7 @@
       </div>
 
       {% endfor %}
+      {% endif %}
     </div>
 
     <div class="col-lg border">
@@ -60,27 +65,6 @@
     </div>
 
   </div>
-
-  <!-- <div class="row" style="margin: 10px;">
-    <div class="col-sm border">
-      <h1>Reviews</h1>
-      <h2>Average Rating: {{rating}}</h2>
-      {% for review in reviews %}
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-10 border">
-                <p>{{review[0]}}</p>
-                <p>{{review[1]}}</p>
-          </div>
-          <div class="col-md-2 border">
-                <p>Place edit and remove review button here</p>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-  </div>
-  </div> -->
-
 </div>
 
 <br>
