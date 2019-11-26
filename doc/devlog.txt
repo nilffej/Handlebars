@@ -119,3 +119,7 @@ liuH -- 2019-11-23 18:43
 liuH -- 2019-11-24 18:43
 - Fixed the backend for reviews
 >>>>>>> e791537a1a381754157dd6e2021f9fdc2a6ae682
+
+chink --2019--1--26 18:20
+- Added reviews page for each individual bike company
+- showing stars currently do not work
