@@ -74,3 +74,15 @@ chuC -- 2019-11-21 21:27
 
 chinK -- 2019-11-21 22:30
 - updated readme with APIs and requirements to run project
+
+liuH -- 2019-11-21 23:43
+- Started to work on backend for profile page
+
+liuH -- 2019-11-22 20:43
+- Edited profile page to include saved bikes
+
+liuH -- 2019-11-23 18:43
+- LoggedIn page added so that users will only see the search bar once logged in
+
+liuH -- 2019-11-24 18:43
+- Fixed the backend for reviews
