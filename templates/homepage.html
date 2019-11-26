@@ -21,10 +21,10 @@
 
 {% block body %}
 <a href="{{ url_for('root') }}" class="nav-link" style="color: black; padding: 0px;">
-<div class="jumbotron text-center" style="background-color: #aed6f1;">
+<div class="jumbotron text-center" style="background-color: #aed6f1; border-radius: 0;">
   <h1>Handlebars</h1>
   <p>Welcome to Handlebars!<br>
-    A site built with the CityBikes, Maps Static, and MetaWeather APIs.
+    A site built with the CityBikes, MapQuest, and MetaWeather APIs.
   </p>
 </div>
 </a>
@@ -38,6 +38,11 @@
   <button class="btn btn-primary" type="submit">Search</button>
 </form>
 
+{% for message in get_flashed_messages() %}
+<br>
+<center>{{ message }}</center>
+{% endfor %}
+
 {% block searchresults %}
 {% endblock %}
 
@@ -49,6 +54,13 @@
 <br>
 <br>
 <p>Don't have an account? <a href="{{ url_for('register') }}">Register here.</a></p>
+</center>
+
+<center style="margin: 100px auto 100px; auto; max-width: 600px;">
+<h3>What is Handlebars?</h3>
+Looking for rentable bike in the city?<br><br>
+With the resources provided by the CityBikes, MapQuest, and MetaWeather APIs, Team Handlebars built a search engine to return rentable
+bicycles found near a location, along with weather information and a map.
 </center>
 
 {% endif %}

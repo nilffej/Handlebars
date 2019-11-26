@@ -18,58 +18,65 @@
 <h1><p>{{ title }}</p></h1>
 
 <div class="container-fluid" >
-<div class="row">
 
-  <div class="col-sm">
-    <div style="margin: 10px;">
-      <h2><p>My Bikes</p><h2>
+  <div class="row">
+    <div class="col-sm">
+      <div style="margin: 10px;">
+        <h2><p>My Bikes</p></h2>
 
-      {% for entry in toprint %}
-      <div class="container-fluid" >
-        <div class="row">
-          <div class="col">
-            <div style="margin: 10px;">
-              <h2><p>{{ entry[3] }}</p><h2>
-              <h4><p>{{ entry[5] }}</p><h4>
-              <form action="/search" method=GET>
-              <input type="hidden" name="searchbar" value="{{entry[2]}}">
-              <button class="btn btn-primary" type="submit">Go To {{entry[3]}}</button>
+        {% if toprint|length == 0 %}
+        <br>
+        <h5>You haven't saved any bikes! <a href="{{ url_for('root') }}">Search for a bike.</a></h5>
+        {% else %}
+        {% for entry in toprint %}
+        <div class="container-fluid" >
+          <div class="row">
+            <div class="col">
+              <div style="margin: 10px;">
+                <h3><p>{{ entry[3] }}</p><h3>
+                <h4><p>{{ entry[5] }}</p><h4>
+                <form action="/search" method=GET>
+                <input type="hidden" name="searchbar" value="{{entry[2]}}">
+                <button class="btn btn-primary" type="submit">Go To {{entry[3]}}</button>
+                </form>
+
+              </div>
+            </div>
+
+            <div class="col-auto" style="text-align: center">
+              <form action="/addReview" method=GET style="padding-bottom: 5px">
+              <input type="hidden" name="id" value="{{entry[0]}}">
+              <button class="btn btn-primary" type="submit">Write/Edit a Review</button>
               </form>
-
+              <form action="/profile" method="GET">
+                <input type="hidden" name="rid" value="{{entry[0]}}">
+                <button class="btn btn-danger" type="submit">Remove</button>
+              </form>
             </div>
           </div>
-
-          <div class="col-auto" style="text-align: center">
-            <form action="/addReview" method=GET>
-            <input type="hidden" name="id" value="{{entry[0]}}">
-            <button class="btn btn-primary" type="submit">Write/Edit a Review</button>
-            </form>
-            <form action="/profile" method="GET">
-              <input type="hidden" name="rid" value="{{entry[0]}}">
-              <button class="btn btn-danger" type="submit">Remove</button>
-            </form>
-          </div>
         </div>
+        {% endfor %}
+        {% endif %}
       </div>
-      {% endfor %}
-
     </div>
   </div>
+  <hr>
 </div>
-<hr>
-</div>
+
 <div class="container-fluid" >
   <div class="row">
     <div class="col-sm">
       <div style="margin: 10px;">
         <h2><p>My Reviews</p><h2>
+
+          <h5>Reviews written: {{ reviews|length }}</h5>
           {% for entry in reviews %}
           <div class="container-fluid" >
             <div class="row">
               <div class="col">
                 <div style="margin: 10px;">
                   {% if entry[1] in locs %}
-                  <h2><p>{{locs[entry[1]][1]}}, {{locs[entry[1]][0]}}</p></h2>
+                  <h3><p>{{locs[entry[1]][1]}}, {{locs[entry[1]][0]}}</p></h3>
                   {% endif %}
                   <h6><p>{{ entry[3] }}</p></h6>
                   {% for n in range(5) %}
@@ -86,8 +93,8 @@
                 </div>
               </div>
 
-              <div class="col-2" style="text-align: center">
-                <form action="/addReview" method=GET>
+              <div class="col-auto" style="text-align: center">
+                <form action="/addReview" method=GET style="padding-bottom: 5px">
                 <input type="hidden" name="id" value="{{entry[1]}}">
                 <button class="btn btn-primary" type="submit">Edit Review</button>
                 </form>
@@ -99,6 +106,7 @@
             </div>
           </div>
           {% endfor %}
+
       </div>
     </div>
   </div>
