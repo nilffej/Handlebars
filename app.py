@@ -86,6 +86,13 @@ def updateUsers():
         userList.sort() # Usernames sorted in alphabetical order
         return userList
 
+def updateReviews():
+    with sqlite3.connect(DB_FILE) as connection:
+        cur = connection.cursor()
+        foo = cur.execute('SELECT * FROM REVIEWS;') # Selects all username/password combinations
+        reviewList = foo.fetchall()
+        return reviewList
+
 #-----------------------------------------------------------------
 
 # DICTIONARY FOR IMPORTANT SEARCH DATA
@@ -296,12 +303,17 @@ def profile():
                     c.execute("INSERT INTO SAVEDBIKES VALUES (?, ?)", (session["user"], request.args["id"]))
             if ("rid" in request.args.keys()):
                 c.execute("DELETE FROM SAVEDBIKES WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["rid"]))
+            if ("dr" in request.args.keys()):
+                c.execute("DELETE FROM REVIEWS WHERE username = (?) AND bikeNumber = (?)", (session["user"], request.args["dr"]))
             connection.commit()
     entryList = updateSavedBikes()
     userList = updateUsers()
+    reviewList = updateReviews()
     # userSaved is filtered list of all entries by specific user
     userSaved = []
     toprint = []
+    reviews = []
+    reviewLocales = {}
     # goes through Saved bikes and if it is the users it appends it
     for entry in entryList:
         if entry[0] == session['user']:
@@ -317,9 +329,23 @@ def profile():
               if x[0] == entry[1]:
                   toprint.append(x)
                   break
+    for entry in reviewList:
+        if entry[0] == session["user"]:
+            reviews.append(entry)
+
+    reviews.reverse()
+    with sqlite3.connect(DB_FILE) as connection:
+        cur = connection.cursor()
+        q = "SELECT * FROM BIKES"
+        foo = cur.execute(q)
+        rL = foo.fetchall()
+        for x in rL:
+          for y in reviews:
+              if x[0] == y[1]:
+                  reviewLocales[y[1]] = (x[2], x[3])
     return render_template("profile.html",
     title = "Profile - {}".format(session["user"]), heading = session["user"],
-    entries = userSaved, toprint = toprint, sessionstatus = "user" in session)
+    entries = userSaved, toprint = toprint, reviews = reviews, locs = reviewLocales, sessionstatus = "user" in session)
 
 if __name__ == "__main__":
     app.debug = True

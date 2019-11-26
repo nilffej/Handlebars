@@ -42,7 +42,7 @@
           <div class="col-auto" style="text-align: center">
             <form action="/addReview" method=GET>
             <input type="hidden" name="id" value="{{entry[0]}}">
-            <button class="btn btn-primary" type="submit">Write a Review</button>
+            <button class="btn btn-primary" type="submit">Write/Edit a Review</button>
             </form>
             <form action="/profile" method="GET">
               <input type="hidden" name="rid" value="{{entry[0]}}">
@@ -56,12 +56,49 @@
     </div>
   </div>
 </div>
+<hr>
 </div>
 <div class="container-fluid" >
   <div class="row">
-    <div class="col-sm border">
+    <div class="col-sm">
       <div style="margin: 10px;">
         <h2><p>My Reviews</p><h2>
+          {% for entry in reviews %}
+          <div class="container-fluid" >
+            <div class="row">
+              <div class="col">
+                <div style="margin: 10px;">
+                  {% if entry[1] in locs %}
+                  <h2><p>{{locs[entry[1]][1]}}, {{locs[entry[1]][0]}}</p></h2>
+                  {% endif %}
+                  <h6><p>{{ entry[3] }}</p></h6>
+                  {% for n in range(5) %}
+                  {% if n < entry[2] %}
+                  <div style="color: #ffc700; float:left;">
+                  ★
+                  </div>
+                  {% else %}
+                  <div style="color: #ccc; float:left;">
+                  ★
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="col-2" style="text-align: center">
+                <form action="/addReview" method=GET>
+                <input type="hidden" name="id" value="{{entry[1]}}">
+                <button class="btn btn-primary" type="submit">Edit Review</button>
+                </form>
+                <form action="/search" method=GET>
+                <input type="hidden" name="searchbar" value="{{locs[entry[1]][1]}}">
+                <button class="btn btn-primary" type="submit">Go To {{locs[entry[1]][1]}}</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
       </div>
     </div>
   </div>

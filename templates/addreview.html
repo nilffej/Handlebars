@@ -10,14 +10,17 @@
   .custom-select {
     width: 10%;
   }
-  *{
+/* CREDIT FOR STAR CSS HERE -> https://codepen.io/tammykimkim/pen/yegZRw */
+*{
     margin: 0;
     padding: 0;
 }
 .rate {
-    float: left;
+    position:fixed;
+    margin-left:-72px;
+    left:50%;
     height: 46px;
-    padding: 0 10px;
+
 }
 .rate:not(:checked) > input {
     position:absolute;
@@ -75,9 +78,10 @@
     Write a review for <b> {{name}}</b>, {{location}} <br>
            <input type="hidden" name="id" value="{{i}}">
            <textarea class="form-control" aria-label="With textarea"
-           rows = "5"
+           rows = "7"
            cols = "60"
            name = "body">{{b}}</textarea>
+          <br>
           <div class="rate">
             <input type="radio" id="star5" name="rate" value="5" />
             <label for="star5" title="5">5 stars</label>
@@ -93,6 +97,14 @@
           <br><br><br>
           <button class="btn btn-success" type="submit">Submit</button>
   </form>
+  {% if b %}
+  <br>
+  <form action="/profile" method="GET">
+    <input type="hidden" name="dr" value={{i}}>
+    <button class="btn btn-danger" type="submit">Delete Review</button>
+  </form>
+  {% endif %}
+
 </center>
 
 {% for message in get_flashed_messages() %}
