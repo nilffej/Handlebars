@@ -112,6 +112,11 @@ def search():
         if len(data) == 0:
             return redirect(url_for("root"))
         firstresult = data["results"][0]["locations"][0]
+        locationaddress = "{}".format(address(firstresult))
+        print(locationaddress)
+        if not (bool(locationaddress)):
+            flash("Location not found. Try a more specific search.")
+            return redirect(url_for("root"))
         searchdict["longlat"] = "{},{}".format(firstresult["latLng"]["lat"],firstresult["latLng"]["lng"])
 
         # WEATHER API - WEATHER SEARCH
@@ -135,35 +140,8 @@ def search():
            for bike in bikeList:
                bikes.append(bike)
 
-
-        # with sqlite3.connect(DB_FILE) as connection:
-        #    cur = connection.cursor()
-        #    q = "SELECT * FROM REVIEWS"
-        #    foo = cur.execute(q)
-        #    reviewList = foo.fetchall()
-        #    specificBikeReviews = []
-        #    if len(bikes) > 0:
-        #        for review in reviewList:
-        #            if review[1] == bikes[0][0]:
-        #                specificBikeReviews.append(review)
-        # numberOfRatings = 0
-        # sum = 0
-        # formattedReviews = []
-        # temp = []
-        # for specificBikeReview in specificBikeReviews:
-        #     temp.append("Stars : {}".format(specificBikeReview[2]))
-        #     temp.append("Review : {}".format(specificBikeReview[3]))
-        #     formattedReviews.append(temp)
-        #     sum += specificBikeReview[2]
-        #     numberOfRatings += 1
-        #     connection.commit()
-        #     temp = []
-        # if numberOfRatings == 0:
-        #     rating = "No Reviews written yet"
-        # else: rating = sum / numberOfRatings
-        # session["bikeID"] = "2";
-        # print(session["bikeID"]);
         return render_template("searchresults.html", place = data['title'],
+                                locationaddress = locationaddress,
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
                                 bikes = bikes,
                                 weather_state_name = weather['weather_state_name'], weatherimage = "https://www.metaweather.com/static/img/weather/png/64/{}.png".format(weather['weather_state_abbr']),
@@ -172,6 +150,22 @@ def search():
                                 sessionstatus = "user" in session)
     else:
         return redirect(url_for("root"))
+
+def address(firstresult):
+    address = []
+    if bool(firstresult["street"]):
+        address.append(firstresult["street"])
+    if bool(firstresult["adminArea6"]):
+        address.append(firstresult["adminArea6"])
+    if bool(firstresult["adminArea5"]):
+        address.append(firstresult["adminArea5"])
+    if bool(firstresult["adminArea3"]):
+        address.append(firstresult["adminArea3"])
+    final = ""
+    for item in address:
+        final += "{}, ".format(item)
+    if bool(final):
+        return final[:-2]
 
 @app.route("/login")
 def login():
@@ -233,9 +227,9 @@ def logout():
 def addUser(user, pswd, conf):
   userList = updateUsers()
   for row in userList:
-        if user == row[0]:
-          flash('Username already taken. Please try again.')
-          return False
+    if user == row[0]:
+      flash('Username already taken. Please try again.')
+      return False
   if (pswd == conf):
     # SQLite3 is being weird with threading, so I've created a separate object
     with sqlite3.connect(DB_FILE) as connection:
