@@ -75,6 +75,7 @@ chuC -- 2019-11-21 21:27
 chinK -- 2019-11-21 22:30
 - updated readme with APIs and requirements to run project
 
+<<<<<<< HEAD
 linJ -- 2019-11-21 23:30
 - finished search bar functionality and connected APIs to yield information that relates across APIs
 - fixed HTML templates to be more concise and organized
@@ -105,3 +106,16 @@ HOME STRETCH PLAN
 - improve UI for appearance and flow and tweak search bar for better results (Jeff) - undefined deadline
 - upon finishing early, we should seek for any API additions that fit our site's goals and try implementing them
 - upon finishing early, we should also improve UI and allow other classmates/friends to test or site
+=======
+liuH -- 2019-11-21 23:43
+- Started to work on backend for profile page
+
+liuH -- 2019-11-22 20:43
+- Edited profile page to include saved bikes
+
+liuH -- 2019-11-23 18:43
+- LoggedIn page added so that users will only see the search bar once logged in
+
+liuH -- 2019-11-24 18:43
+- Fixed the backend for reviews
+>>>>>>> e791537a1a381754157dd6e2021f9fdc2a6ae682
