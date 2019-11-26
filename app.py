@@ -347,6 +347,24 @@ def profile():
     title = "Profile - {}".format(session["user"]), heading = session["user"],
     entries = userSaved, toprint = toprint, reviews = reviews, locs = reviewLocales, sessionstatus = "user" in session)
 
+@app.route("/reviews")
+def reviews():
+    print(request.args["id"])
+    # print(request.args["company"])
+
+    with sqlite3.connect(DB_FILE) as connection:
+       cur = connection.cursor()
+       q = "SELECT * FROM REVIEWS WHERE bikeNumber = '{}'".format(request.args["id"])
+       foo = cur.execute(q)
+       reviews = foo.fetchall()
+       print(reviews[0][2])
+       x = "SELECT bikeID FROM BIKES WHERE bikeNumber = '{}'".format(request.args["id"])
+       goo = cur.execute(x)
+       name = goo.fetchall()
+       print(name[0][0])
+
+    return render_template("reviews.html", sessionstatus = "user" in session, review = reviews, company = name[0][0])
+
 if __name__ == "__main__":
     app.debug = True
     app.run()

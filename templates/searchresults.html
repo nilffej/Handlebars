@@ -16,6 +16,18 @@
     border-color:lightgray;
     border-width: 5px;
   }
+
+  .submitLink {
+    background-color: transparent;
+    text-decoration: underline;
+    border: none;
+    color: blue;
+    cursor: pointer;
+  }
+  submitLink:focus {
+    outline: none;
+  }
+
 </style>
 {% endblock %}
 
@@ -39,11 +51,15 @@
       <p>No bikes found at this location.</p>
       {% else %}
       {% for bike in bikes %}
-
+      <!-- {{bike[0]}} -->
       <div class="container-fluid">
         <div class="row">
           <div class="col">
-            <h3>{{ bike[3] }}</h3>
+            <form  action="/reviews" method="GET">
+              <input type="hidden" name="id" value="{{bike[0]}}">
+              <h3><input type="submit" class = "submitLink" value="{{bike[3]}}" /></h3>
+
+            </form>
             <p>{{ bike[5] }}</p>
           </div>
           <div class="col">
