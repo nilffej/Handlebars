@@ -74,3 +74,34 @@ chuC -- 2019-11-21 21:27
 
 chinK -- 2019-11-21 22:30
 - updated readme with APIs and requirements to run project
+
+linJ -- 2019-11-21 23:30
+- finished search bar functionality and connected APIs to yield information that relates across APIs
+- fixed HTML templates to be more concise and organized
+- changed returned weather information to be more relevant and useful
+
+linJ -- 2019-11-22 14:45
+- added map to return results with MapQuest API
+- changed buttons on navbar to base on session status
+
+linJ -- 2019-11-23 20:30
+- completed full back end implementation of MapQuest API for weather, map, and bike searching
+- reformatted database fields for efficiency
+- added bike column and reformatted appropriately
+
+linJ -- 2019-11-24 01:00
+- changed database table BIKES to hold addresses instead of coordinates
+- improved UI to be more organized and aesthetic
+
+linJ -- 2019-11-24 02:40
+- improved UI to be more informative for empty results/fields on site
+
+
+linJ -- 2019-11-26 14:13
+HOME STRETCH PLAN
+- finish bike pages with user reviews (Kenneth) - 2019-11-29
+- fix footer formatting (Calvin) - 2019-11-29
+- seek additional features that can improve user interaction (Henry) - undefined deadline
+- improve UI for appearance and flow and tweak search bar for better results (Jeff) - undefined deadline
+- upon finishing early, we should seek for any API additions that fit our site's goals and try implementing them
+- upon finishing early, we should also improve UI and allow other classmates/friends to test or site
