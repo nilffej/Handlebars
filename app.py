@@ -113,7 +113,7 @@ def search():
             return redirect(url_for("root"))
         firstresult = data["results"][0]["locations"][0]
         locationaddress = "{}".format(address(firstresult))
-        print(locationaddress)
+        # print(locationaddress)
         if not (bool(locationaddress)):
             flash("Location not found. Try a more specific search.")
             return redirect(url_for("root"))
@@ -343,7 +343,7 @@ def profile():
 
 @app.route("/reviews")
 def reviews():
-    print(request.args["id"])
+    # print(request.args["id"])
     # print(request.args["company"])
 
     with sqlite3.connect(DB_FILE) as connection:
@@ -351,13 +351,11 @@ def reviews():
        q = "SELECT * FROM REVIEWS WHERE bikeNumber = '{}'".format(request.args["id"])
        foo = cur.execute(q)
        reviews = foo.fetchall()
-       print(reviews[0][2])
-       x = "SELECT bikeID FROM BIKES WHERE bikeNumber = '{}'".format(request.args["id"])
+       x = "SELECT * FROM BIKES WHERE bikeNumber = '{}'".format(request.args["id"])
        goo = cur.execute(x)
        name = goo.fetchall()
-       print(name[0][0])
 
-    return render_template("reviews.html", sessionstatus = "user" in session, review = reviews, company = name[0][0])
+    return render_template("reviews.html", sessionstatus = "user" in session, review = reviews, toprint = name)
 
 if __name__ == "__main__":
     app.debug = True

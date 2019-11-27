@@ -51,6 +51,7 @@
 	<input class="form-control" type="password" name="confirmPass" placeholder="Confirm Password"><br>
 	<button class="btn btn-success" type="submit">Register</button>
 </form>
+<br><br><br>
 </center>
 
 {% for message in get_flashed_messages() %}
@@ -58,8 +59,5 @@
 <center><b>{{ message }}</b></center>
 {% endfor %}
 
-<div style="position: absolute; bottom: 0; padding: 6px; margin-top: 0; width: 100%; background: rgba(0, 0, 0, 0.5); color: white; text-align: center; border-top: solid; border-color:lightgray; border-width: 5px;">
-   &copy Team HandleBars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu <br> "What do a bike and a rubber duck have in common? They both have a handlebar except for the duck."
-</div>
 
 {% endblock %}

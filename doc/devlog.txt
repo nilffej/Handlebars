@@ -75,20 +75,34 @@ chuC -- 2019-11-21 21:27
 chinK -- 2019-11-21 22:30
 - updated readme with APIs and requirements to run project
 
-<<<<<<< HEAD
 linJ -- 2019-11-21 23:30
 - finished search bar functionality and connected APIs to yield information that relates across APIs
 - fixed HTML templates to be more concise and organized
 - changed returned weather information to be more relevant and useful
 
+liuH -- 2019-11-21 23:43
+- Started to work on backend for profile page
+
 linJ -- 2019-11-22 14:45
 - added map to return results with MapQuest API
 - changed buttons on navbar to base on session status
+
+liuH -- 2019-11-22 20:43
+- Edited profile page to include saved bikes
+
+liuH -- 2019-11-23 18:43
+- LoggedIn page added so that users will only see the search bar once logged in
 
 linJ -- 2019-11-23 20:30
 - completed full back end implementation of MapQuest API for weather, map, and bike searching
 - reformatted database fields for efficiency
 - added bike column and reformatted appropriately
+
+chuC -- 2019-11-23 22:46
+- added write/edit review + remove bike buttons on profile page
+- added write/edit review functionality (new route, html + css, db connections -- it all works!)
+- added Add to My Bikes button and its functionality on searchpage for each search result
+- reinstate prior db format
 
 linJ -- 2019-11-24 01:00
 - changed database table BIKES to hold addresses instead of coordinates
@@ -97,6 +111,16 @@ linJ -- 2019-11-24 01:00
 linJ -- 2019-11-24 02:40
 - improved UI to be more informative for empty results/fields on site
 
+liuH -- 2019-11-24 18:43
+- Fixed the backend for reviews
+
+chuC -- 2019-11-25 2:45
+- added functionality to remove bike button on profile page
+- reformatted unconventional href redirecting to forms
+
+chuC -- 2019-11-25 20:55
+- added delete review option to edit state of addreview page
+- successfully displayed user's reviews/ratings on profile page with similar button functions as My Bikes
 
 linJ -- 2019-11-26 14:13
 HOME STRETCH PLAN
@@ -106,20 +130,14 @@ HOME STRETCH PLAN
 - improve UI for appearance and flow and tweak search bar for better results (Jeff) - undefined deadline
 - upon finishing early, we should seek for any API additions that fit our site's goals and try implementing them
 - upon finishing early, we should also improve UI and allow other classmates/friends to test or site
-=======
-liuH -- 2019-11-21 23:43
-- Started to work on backend for profile page
 
-liuH -- 2019-11-22 20:43
-- Edited profile page to include saved bikes
-
-liuH -- 2019-11-23 18:43
-- LoggedIn page added so that users will only see the search bar once logged in
-
-liuH -- 2019-11-24 18:43
-- Fixed the backend for reviews
->>>>>>> e791537a1a381754157dd6e2021f9fdc2a6ae682
-
-chink --2019--1--26 18:20
+chink --2019-11-26 18:20
 - Added reviews page for each individual bike company
 - showing stars currently do not work
+
+chuC -- 2019-11-26 19:41
+- Fixed showing stars for reviews page
+- Editted buttons + functionality on profile page for My Reviews section (not final)
+- Made navbar + footer have fixed positions on screen => reformatted each html page to account for this
+- Attempted fix at centering star rating on addreview page
+
