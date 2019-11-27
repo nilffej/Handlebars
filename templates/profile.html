@@ -40,17 +40,18 @@
         <br>
         <h5>You haven't saved any bikes! <a href="{{ url_for('root') }}">Search for a bike.</a></h5>
         {% else %}
+        <h5> Saved Bikes: {{ toprint|length }} </h5>
         {% for entry in toprint %}
         <div class="container-fluid" >
           <div class="row">
             <div class="col">
               <div style="margin: 10px;">
                 <h3><p>{{ entry[3] }}</p><h3>
-                <h4><p>{{ entry[5] }}</p><h4>
-                <p><form action="/search" method=GET>
-                <input type="hidden" name="searchbar" value="{{entry[2]}}">
-                <button class="btn btn-primary" type="submit">{{entry[3]}} Information</button>
-              </form></p>
+                <h4><p><form action="/search" method="GET" style="margin: 0; padding: 0;">
+                  <input type="hidden" name="searchbar" value="{{entry[5]}}" >
+                  <input type="submit" class="submitLink" value="{{entry[5]}}" style="display: inline; margin-left:-8px;">
+                </form>
+                </p></h4>
                 <form action="/reviews" method=GET>
                 <input type="hidden" name="id" value="{{entry[0]}}">
                 <button class="btn btn-primary" type="submit">{{entry[3]}} Reviews</button>
@@ -59,6 +60,7 @@
             </div>
 
             <div class="col-2" style="text-align: center">
+              <br>
               <form action="/addReview" method=GET style="padding-bottom: 5px">
               <input type="hidden" name="id" value="{{entry[0]}}">
               <button class="btn btn-primary" type="submit">Write/Edit a Review</button>
@@ -84,7 +86,7 @@
       <div style="margin: 10px;">
         <h2><p>My Reviews</p><h2>
 
-          <h5>Reviews written: {{ reviews|length }}</h5>
+          <h5>Reviews Written: {{ reviews|length }}</h5>
           {% for entry in reviews %}
           <div class="container-fluid" >
             <div class="row">
@@ -94,8 +96,8 @@
                   <h3>
                     <form action="/search" method="GET" style="margin: 0; padding: 0;">
                       {{locs[entry[1]][1]}},
-                      <input type="hidden" name="searchbar" value="{{locs[entry[1]][0]}}" style="display: inline;">
-                      <input type="submit" class="submitLink" value="{{locs[entry[1]][0]}}" style="display: inline;">
+                      <input type="hidden" name="searchbar" value="{{locs[entry[1]][0]}}">
+                      <input type="submit" class="submitLink" value="{{locs[entry[1]][0]}}" style="display: inline; margin-left:-8px;">
                     </form>
                     </h3>
                   {% endif %}
@@ -125,7 +127,7 @@
                 </form> -->
                 <form action="/reviews" method=GET>
                 <input type="hidden" name="id" value="{{entry[1]}}">
-                <button class="btn btn-primary" type="submit">See all {{locs[entry[1]][1]}} Reviews</button>
+                <button class="btn btn-primary" type="submit">See all Reviews</button>
                 </form>
               </div>
             </div>

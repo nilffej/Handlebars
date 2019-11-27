@@ -6,6 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Carter+One" />
     <title>Handlebars {% block title %}{% endblock %}</title>
     <style>
     </style>
@@ -19,10 +20,11 @@
     {% endblock %}
     <nav class="navbar navbar-expand navbar-light" style="background-color: #5dade2; position:fixed; right:0;width: 100%; top:0;">
       {% if sessionstatus %}
-      <p class="nav navbar-nav"></p>
+      <p class="nav navbar-nav" style="float:left;"></p>
       {% endif %}
-
+      <h6 style="margin-top:6px; font-family: Carter One; font-size: 20px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 15.4px;">Handlebars</h6>
       <ul class="nav navbar-nav ml-auto" style="">
+
           {% block buttons %}
           {% endblock %}
         </ul>
