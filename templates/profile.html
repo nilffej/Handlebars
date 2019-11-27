@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 {% extends "template.html" %}
 
+{% block css %}
+<style>
+.submitLink {
+  background-color: transparent;
+  text-decoration: underline;
+  border: none;
+  color: blue;
+  cursor: pointer;
+}
+</style>
+{% endblock %}
+
 {% block buttons %}
 <li class="nav-item">
   <a href="{{ url_for('root') }}" class="nav-link">Home</a>
@@ -35,15 +47,18 @@
               <div style="margin: 10px;">
                 <h3><p>{{ entry[3] }}</p><h3>
                 <h4><p>{{ entry[5] }}</p><h4>
-                <form action="/search" method=GET>
+                <p><form action="/search" method=GET>
                 <input type="hidden" name="searchbar" value="{{entry[2]}}">
-                <button class="btn btn-primary" type="submit">Go To {{entry[3]}}</button>
+                <button class="btn btn-primary" type="submit">{{entry[3]}} Information</button>
+              </form></p>
+                <form action="/reviews" method=GET>
+                <input type="hidden" name="id" value="{{entry[0]}}">
+                <button class="btn btn-primary" type="submit">{{entry[3]}} Reviews</button>
                 </form>
-
               </div>
             </div>
 
-            <div class="col-auto" style="text-align: center">
+            <div class="col-2" style="text-align: center">
               <form action="/addReview" method=GET style="padding-bottom: 5px">
               <input type="hidden" name="id" value="{{entry[0]}}">
               <button class="btn btn-primary" type="submit">Write/Edit a Review</button>
@@ -76,16 +91,22 @@
               <div class="col">
                 <div style="margin: 10px;">
                   {% if entry[1] in locs %}
-                  <h3><p>{{locs[entry[1]][1]}}, {{locs[entry[1]][0]}}</p></h3>
+                  <h3>
+                    <form action="/search" method="GET" style="margin: 0; padding: 0;">
+                      {{locs[entry[1]][1]}},
+                      <input type="hidden" name="searchbar" value="{{locs[entry[1]][0]}}" style="display: inline;">
+                      <input type="submit" class="submitLink" value="{{locs[entry[1]][0]}}" style="display: inline;">
+                    </form>
+                    </h3>
                   {% endif %}
                   <h6><p>{{ entry[3] }}</p></h6>
                   {% for n in range(5) %}
                   {% if n < entry[2] %}
-                  <div style="color: #ffc700; float:left;">
+                  <div style="color: #ffc700; float:left; font-size:25px;">
                   ★
                   </div>
                   {% else %}
-                  <div style="color: #ccc; float:left;">
+                  <div style="color: #ccc; float:left; font-size:25px;">
                   ★
                   </div>
                   {% endif %}
@@ -93,14 +114,18 @@
                 </div>
               </div>
 
-              <div class="col-auto" style="text-align: center">
+              <div class="col-2" style="text-align: center">
                 <form action="/addReview" method=GET style="padding-bottom: 5px">
                 <input type="hidden" name="id" value="{{entry[1]}}">
                 <button class="btn btn-primary" type="submit">Edit Review</button>
                 </form>
-                <form action="/search" method=GET>
+                <!-- <form action="/search" method=GET style="padding-bottom: 5px">
                 <input type="hidden" name="searchbar" value="{{locs[entry[1]][0]}}">
-                <button class="btn btn-primary" type="submit">Go To {{locs[entry[1]][1]}}</button>
+                <button class="btn btn-primary" type="submit">{{locs[entry[1]][1]}} Information</button>
+                </form> -->
+                <form action="/reviews" method=GET>
+                <input type="hidden" name="id" value="{{entry[1]}}">
+                <button class="btn btn-primary" type="submit">See all {{locs[entry[1]][1]}} Reviews</button>
                 </form>
               </div>
             </div>
@@ -112,5 +137,5 @@
   </div>
 </div>
 
-</div>
+</div> <br><br><br>
 {% endblock %}

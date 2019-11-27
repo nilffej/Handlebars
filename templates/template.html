@@ -13,7 +13,11 @@
   </head>
   <body style="font-family: 'Helvetica', 'Arial', sans-serif;">
 
-    <nav class="navbar navbar-expand navbar-light" style="background-color: #5dade2;">
+
+    <br><br><br>
+    {% block body %}
+    {% endblock %}
+    <nav class="navbar navbar-expand navbar-light" style="background-color: #5dade2; position:fixed; right:0;width: 100%; top:0;">
       {% if sessionstatus %}
       <p class="nav navbar-nav"></p>
       {% endif %}
@@ -24,10 +28,9 @@
         </ul>
       </div>
     </nav>
-
-    {% block body %}
-    {% endblock %}
-
+  <footer style="position: fixed; left: 0; bottom: 0; padding: 5px; margin-top: 0; width: 100%; background: rgba(0, 0, 0, 0.75); color: white; text-align: center; border-top: solid; border-color:lightgray; border-width: 5px;">
+     &copy Team HandleBars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu <br> "What do a bike and a rubber duck have in common? They both have a handlebar except for the duck."
+  </footer>
 
   </body>
 

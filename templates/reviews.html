@@ -15,8 +15,9 @@
 {% block body %}
 <div style="margin: 15px;">
 
-<h1><p>{{ company }}</p></h1>
-
+<h1><p>{{ toprint[0][3] }}, {{ toprint[0][2] }}</p></h1>
+<h3><p>{{ toprint[0][1] }}</p></h3>
+<hr>
 
 <div class="container-fluid" >
   <div class="row">
@@ -30,9 +31,15 @@
                 <h3><p>{{ entry[0] }}: </p><h3>
                  <h6><p>{{ entry[3] }}</p><h6>
                    {% for n in range(5) %}
-                   <div style="color: #ffc700; float:left;">
+                   {% if n < entry[2] %}
+                   <div style="color: #ffc700; float:left; font-size:25px;">
                    ★
                    </div>
+                   {% else %}
+                   <div style="color: #ccc; float:left; font-size:25px;">
+                   ★
+                   </div>
+                   {% endif %}
                    {% endfor %}
               </div>
             </div>
@@ -43,11 +50,6 @@
   </div>
 </div>
 
-
-
-
-<div class="footer-copyright text-center py-3">
-  &copy Team HandleBars - Kenneth Chin, Calvin Chu, Jeff Lin, Henry Liu <br> "What do a bike and a rubber duck have in common? They both have a handlebar except for the duck."
-</div>
+<br><br><br>
 
 {% endblock %}
