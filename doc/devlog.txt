@@ -141,3 +141,5 @@ chuC -- 2019-11-26 19:41
 - Made navbar + footer have fixed positions on screen => reformatted each html page to account for this
 - Attempted fix at centering star rating on addreview page
 
+chink --2019-12-2 15:23
+- Added some comments to app.py
