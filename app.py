@@ -53,6 +53,7 @@ if c.fetchone()[0] < 1:
     bikeapi = urllib.request.urlopen("http://api.citybik.es/v2/networks")
     bikeresponse = bikeapi.read()
     bikedata = json.loads(bikeresponse)
+    # selecting specified information of each bike company and inserting it into BIKES table
     for i in bikedata['networks']:
         coors = "{},{}".format(i['location']['latitude'],i['location']['longitude'])
         weatherapi = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(coors))
@@ -78,6 +79,7 @@ def updateSavedBikes():
         savedBikes.reverse() # Reverse for recent posts at top
         return savedBikes
 
+#retrieves data of all the users
 def updateUsers():
     with sqlite3.connect(DB_FILE) as connection:
         cur = connection.cursor()
@@ -86,6 +88,7 @@ def updateUsers():
         userList.sort() # Usernames sorted in alphabetical order
         return userList
 
+#revtrieves data of all the users
 def updateReviews():
     with sqlite3.connect(DB_FILE) as connection:
         cur = connection.cursor()
@@ -98,10 +101,12 @@ def updateReviews():
 # DICTIONARY FOR IMPORTANT SEARCH DATA
 searchdict = {}
 
+#root route - directs to homepage and creates user session
 @app.route("/")
 def root():
     return render_template("homepage.html", sessionstatus = "user" in session)
 
+#route for search bar
 @app.route("/search")
 def search():
     if request.args and request.args["searchbar"]:
@@ -140,6 +145,7 @@ def search():
            for bike in bikeList:
                bikes.append(bike)
 
+               #directs to html with necessary information from the 3 APIS
         return render_template("searchresults.html", place = data['title'],
                                 locationaddress = locationaddress,
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
@@ -217,13 +223,13 @@ def register():
       flash('Please make sure to fill all fields!')
   return render_template("register.html")
 
-
+#logout route: removes the user from session and redirects to root
 @app.route("/logout")
 def logout():
     if "user" in session:
         session.pop('user')
     return redirect(url_for("root"))
-
+#adds user with necessary credentials
 def addUser(user, pswd, conf):
   userList = updateUsers()
   for row in userList:
@@ -242,20 +248,23 @@ def addUser(user, pswd, conf):
     flash('Passwords do not match. Please try again.')
     return False
 
+#inserts a selected bike of the current user
 @app.route("/addBike")
 def addBike():
     with sqlite3.connect(DB_FILE) as connection:
         c = connection.cursor()
-        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2))
+        c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format(session['user'],2)) #Adds the bike of the logged in user
         connection.commit()
     return redirect(url_for("profile"))
 
+#adds the reviews of the logged in user of a selected bike company
 @app.route("/addReview")
 def addReview():
     if "user" not in session:
         return redirect(url_for('root'))
     if (len(request.args) == 1):
         with sqlite3.connect(DB_FILE) as connection:
+            #retrieves the table REVIEWS of the given user and selected bikeID(bikeNumber)
             c = connection.cursor()
             n = c.execute("SELECT * FROM BIKES WHERE bikeNumber = (?)", (request.args["id"],)).fetchone()[3]
             loc = c.execute("SELECT * FROM BIKES WHERE bikeNumber = (?)", (request.args["id"],)).fetchone()[2]
@@ -264,6 +273,7 @@ def addReview():
             if (len(l) > 0) :
                 return render_template("addreview.html", name = n, location = loc, i = request.args["id"], b = l[0][3])
             else: return render_template("addreview.html", name = n, location = loc, i = request.args["id"])
+            #checks if user has put in a written review
     if (len(request.args) >= 2):
         if (len(request.args["body"]) == 0):
             flash('Cannot leave body empty.')
@@ -286,6 +296,7 @@ def addReview():
 # Dispalys user's personal blog page and loads HTML with blog writing form
 @app.route("/profile")
 def profile():
+    #checks if user in session
     if "user" not in session:
         return redirect(url_for('root'))
     if (len(request.args) == 1):
@@ -341,20 +352,18 @@ def profile():
     title = "Profile - {}".format(session["user"]), heading = session["user"],
     entries = userSaved, toprint = toprint, reviews = reviews, locs = reviewLocales, sessionstatus = "user" in session)
 
+
 @app.route("/reviews")
 def reviews():
-    # print(request.args["id"])
-    # print(request.args["company"])
-
     with sqlite3.connect(DB_FILE) as connection:
        cur = connection.cursor()
-       q = "SELECT * FROM REVIEWS WHERE bikeNumber = '{}'".format(request.args["id"])
+       q = "SELECT * FROM REVIEWS WHERE bikeNumber = '{}'".format(request.args["id"]) #retrieves the reviews of a given bike company
        foo = cur.execute(q)
        reviews = foo.fetchall()
        x = "SELECT * FROM BIKES WHERE bikeNumber = '{}'".format(request.args["id"])
        goo = cur.execute(x)
        name = goo.fetchall()
-
+       #reroutes to html page with the reviews info
     return render_template("reviews.html", sessionstatus = "user" in session, review = reviews, toprint = name)
 
 if __name__ == "__main__":
