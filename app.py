@@ -170,8 +170,10 @@ def address(firstresult):
     final = ""
     for item in address:
         final += "{}, ".format(item)
+    print(final)
     if bool(final):
         return final[:-2]
+    return ""
 
 @app.route("/login")
 def login():
