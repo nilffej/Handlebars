@@ -31,6 +31,6 @@ After activating the virutal environment:
 `(venv)$ cd Handlebars  
 `(venv)$ pip3 install -r doc/requirements.txt`  
 
-### Run the project 
+### Run the project: 
 `$ python3 app.py`  
   
