@@ -21,17 +21,17 @@ c = db.cursor()
 #Creates USER
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='USER' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE USER(username TEXT, password TEXT);")]
+    c.execute("CREATE TABLE USER(username TEXT, password TEXT);")
 
 #Creates SAVEDBIKES
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='SAVEDBIKES' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE SAVEDBIKES(username TEXT, bikeNumber INTEGER);")\
+    c.execute("CREATE TABLE SAVEDBIKES(username TEXT, bikeNumber INTEGER);")
 
 #Creates REVIEWS
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='REVIEWS' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE REVIEWS(username TEXT, bikeNumber INTEGER, rating INTEGER, content BLOB);")\
+    c.execute("CREATE TABLE REVIEWS(username TEXT, bikeNumber INTEGER, rating INTEGER, content BLOB);")
 
 #Creates BIKES
 c.execute(" SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ")
