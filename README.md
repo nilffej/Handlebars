@@ -28,7 +28,7 @@ Python3 and pip is required to run the project
 ### Clone the project and install requirments.txt:
 `$ git clone git@github.com:nilffej/Handlebars.git`  
 After activating the virutal environment:  
-`(venv)$ cd Handlebars  
+`(venv)$ cd Handlebars`    
 `(venv)$ pip3 install -r doc/requirements.txt`  
 
 ### Run the project: 
