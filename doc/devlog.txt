@@ -131,7 +131,7 @@ HOME STRETCH PLAN
 - upon finishing early, we should seek for any API additions that fit our site's goals and try implementing them
 - upon finishing early, we should also improve UI and allow other classmates/friends to test or site
 
-chink --2019-11-26 18:20
+chinK -- 2019-11-26 18:20
 - Added reviews page for each individual bike company
 - showing stars currently do not work
 
@@ -141,5 +141,8 @@ chuC -- 2019-11-26 19:41
 - Made navbar + footer have fixed positions on screen => reformatted each html page to account for this
 - Attempted fix at centering star rating on addreview page
 
-chink --2019-12-2 15:23
+chink -- 2019-12-02 15:23
 - Added some comments to app.py
+
+linJ -- 2019-12-03 01:26
+- Added comments to app.py

@@ -21,30 +21,17 @@ c = db.cursor()
 #Creates USER
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='USER' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE USER(username TEXT, password TEXT);")
-    # TESTS
-    c.execute("INSERT INTO USER VALUES ('{}', '{}')".format("hliu00","hi"))
-    c.execute("INSERT INTO USER VALUES ('{}', '{}')".format("hliu01","hi"))
+    c.execute("CREATE TABLE USER(username TEXT, password TEXT);")]
 
 #Creates SAVEDBIKES
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='SAVEDBIKES' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE SAVEDBIKES(username TEXT, bikeNumber INTEGER);")
-    # TESTS
-    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu00",2))
-    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu00",1))
-    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu01",2))
-    c.execute("INSERT INTO SAVEDBIKES VALUES ('{}', '{}')".format("hliu01",1))
+    c.execute("CREATE TABLE SAVEDBIKES(username TEXT, bikeNumber INTEGER);")\
 
 #Creates REVIEWS
 c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='REVIEWS' ''')
 if c.fetchone()[0] < 1:
-    c.execute("CREATE TABLE REVIEWS(username TEXT, bikeNumber INTEGER, rating INTEGER, content BLOB);")
-    # TESTS
-    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu00", 2, 5, "0dswdwdw"))
-    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu01", 2, 5, "1dswdwdw"))
-    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu00", 1, 4, "2dswdwdw"))
-    c.execute("INSERT INTO REVIEWS VALUES ('{}', '{}', '{}', '{}')".format("hliu01", 1, 4, "3dswdwdw"))
+    c.execute("CREATE TABLE REVIEWS(username TEXT, bikeNumber INTEGER, rating INTEGER, content BLOB);")\
 
 #Creates BIKES
 c.execute(" SELECT count(name) FROM sqlite_master WHERE type='table' AND name='BIKES' ")
@@ -116,9 +103,10 @@ def search():
         data = json.loads(response)
         if len(data) == 0:
             return redirect(url_for("root"))
+        # stores first result from MapQuest
         firstresult = data["results"][0]["locations"][0]
         locationaddress = "{}".format(address(firstresult))
-        # print(locationaddress)
+        # if location not found by MapQuest
         if not (bool(locationaddress)):
             flash("Location not found. Try a more specific search.")
             return redirect(url_for("root"))
@@ -128,7 +116,9 @@ def search():
         u = urllib.request.urlopen("https://www.metaweather.com/api/location/search/?lattlong={}".format(searchdict["longlat"]))
         response = u.read()
         data = json.loads(response)
+        # pulls city from MetaWeather
         city = data[0]["title"]
+        # plugs in unique city ID as parameter for MetaWeather
         u = urllib.request.urlopen("https://www.metaweather.com/api/location/{}".format(data[0]["woeid"]))
         response = u.read()
         data = json.loads(response)
@@ -137,6 +127,7 @@ def search():
         # BIKE DATABASE + API
         with sqlite3.connect(DB_FILE) as connection:
            cur = connection.cursor()
+           # selects bikes with matching city as weather location
            q = "SELECT * FROM BIKES WHERE city = '{}'".format(city)
            foo = cur.execute(q)
            bikeList = foo.fetchall()
@@ -145,7 +136,7 @@ def search():
            for bike in bikeList:
                bikes.append(bike)
 
-               #directs to html with necessary information from the 3 APIS
+        #directs to html with necessary information from the 3 APIS
         return render_template("searchresults.html", place = data['title'],
                                 locationaddress = locationaddress,
                                 applicable_date = weather['applicable_date'], celsius = int(weather['the_temp']), farenheit = int(weather['the_temp']*9.0/5+32),
@@ -157,6 +148,7 @@ def search():
     else:
         return redirect(url_for("root"))
 
+# processes MapQuest info to create comprehendable address string
 def address(firstresult):
     address = []
     if bool(firstresult["street"]):
