@@ -5,7 +5,7 @@ P #01 — ArRESTed Development
 
 --------------------------------------------------------------------------------
 DESIGN DOC INFO:
-
+e
 v 0.0
   - Added basic requirements
 v 0.1
@@ -140,4 +140,3 @@ chuC -- 2019-11-26 19:41
 - Editted buttons + functionality on profile page for My Reviews section (not final)
 - Made navbar + footer have fixed positions on screen => reformatted each html page to account for this
 - Attempted fix at centering star rating on addreview page
-
